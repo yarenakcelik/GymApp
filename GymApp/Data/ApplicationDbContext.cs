@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymApp.Data
 {
-    // DİKKAT: IdentityDbContext<ApplicationUser> olsun
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -12,7 +11,6 @@ namespace GymApp.Data
         {
         }
 
-        // Senin modellerin
         public DbSet<Gym> Gyms { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<Trainer> Trainers { get; set; }
@@ -25,9 +23,40 @@ namespace GymApp.Data
         {
             base.OnModelCreating(builder);
 
-            // N-N ilişki için composite key
+            // ---- TrainerService (N-N) ----
             builder.Entity<TrainerService>()
                 .HasKey(ts => new { ts.TrainerId, ts.ServiceId });
+
+            builder.Entity<TrainerService>()
+                .HasOne(ts => ts.Trainer)
+                .WithMany(t => t.TrainerServices) // Trainer modelinde ICollection<TrainerService> varsa
+                .HasForeignKey(ts => ts.TrainerId)
+                .OnDelete(DeleteBehavior.NoAction); // CASCADE KIR
+
+            builder.Entity<TrainerService>()
+                .HasOne(ts => ts.Service)
+                .WithMany(s => s.TrainerServices)   // Service modelinde ICollection<TrainerService> varsa
+                .HasForeignKey(ts => ts.ServiceId)
+                .OnDelete(DeleteBehavior.NoAction); // İstersen burada da NoAction
+
+            // ---- Appointment ilişkileri ----
+            builder.Entity<Appointment>()
+                .HasOne(a => a.Trainer)
+                .WithMany(t => t.Appointments)
+                .HasForeignKey(a => a.TrainerId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Appointment>()
+                .HasOne(a => a.Service)
+                .WithMany(s => s.Appointments)
+                .HasForeignKey(a => a.ServiceId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Appointment>()
+                .HasOne(a => a.MemberProfile)
+                .WithMany(m => m.Appointments)
+                .HasForeignKey(a => a.MemberProfileId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
