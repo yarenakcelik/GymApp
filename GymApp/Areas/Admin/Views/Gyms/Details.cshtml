@@ -1,42 +1,37 @@
 ﻿@model GymApp.Models.Gym
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Salon Detayı";
 }
 
-<h1>Details</h1>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Spor Salonu Detayı</h2>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Listeye Dön</a>
+        </div>
 
-<div>
-    <h4>Gym</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Address)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OpenTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OpenTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CloseTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CloseTime)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+        <div class="card-body">
+            <dl class="row">
+
+                <dt class="col-sm-3">Adı</dt>
+                <dd class="col-sm-9">@Model.Name</dd>
+
+                <dt class="col-sm-3">Adres</dt>
+                <dd class="col-sm-9">@Model.Address</dd>
+
+                <dt class="col-sm-3">Açılış Saati</dt>
+                <dd class="col-sm-9">@Model.OpenTime</dd>
+
+                <dt class="col-sm-3">Kapanış Saati</dt>
+                <dd class="col-sm-9">@Model.CloseTime</dd>
+
+            </dl>
+
+            <div class="mt-3">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Düzenle</a>
+                <a asp-action="Index" class="btn btn-link">Listeye Dön</a>
+            </div>
+        </div>
+    </div>
 </div>
