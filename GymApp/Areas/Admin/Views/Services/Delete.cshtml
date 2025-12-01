@@ -1,0 +1,46 @@
+﻿@model GymApp.Models.Service
+
+@{
+    ViewData["Title"] = "Hizmeti Sil";
+}
+
+<h2 class="mt-4 mb-3">Hizmeti Sil</h2>
+
+<div class="row">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">Bu hizmeti silmek istediğinizden emin misiniz?</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Name)</dt>
+                    <dd class="col-sm-8">@Model.Name</dd>
+
+                    <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Category)</dt>
+                    <dd class="col-sm-8">@Model.Category</dd>
+
+                    <dt class="col-sm-4">@Html.DisplayNameFor(m => m.DurationMinutes)</dt>
+                    <dd class="col-sm-8">@Model.DurationMinutes dakika</dd>
+
+                    <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Price)</dt>
+                    <dd class="col-sm-8">@Model.Price.ToString("N2") ₺</dd>
+
+                    <dt class="col-sm-4">Spor Salonu</dt>
+                    <dd class="col-sm-8">@Model.Gym?.Name</dd>
+                </dl>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    Vazgeç / Listeye Dön
+                </a>
+                <form asp-action="Delete" class="m-0">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger">
+                        Sil
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

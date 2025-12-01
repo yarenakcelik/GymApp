@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace GymApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]   // 🔥 Eksik olan önemli satır
+    [Authorize(Roles = "Admin")]   
     public class GymsController : Controller
     {
         private readonly ApplicationDbContext _context;

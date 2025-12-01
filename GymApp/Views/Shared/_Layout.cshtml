@@ -28,15 +28,46 @@
 
                         @if (User.IsInRole("Admin"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-warning"
-                                   asp-area="Admin"
-                                   asp-controller="Gyms"
-                                   asp-action="Index">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-warning"
+                                   href="#"
+                                   id="adminDropdown"
+                                   role="button"
+                                   data-bs-toggle="dropdown"
+                                   aria-expanded="false">
                                     Admin Panel
                                 </a>
+
+                                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-area="Admin"
+                                           asp-controller="Gyms"
+                                           asp-action="Index">
+                                            Spor Salonları
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-area="Admin"
+                                           asp-controller="Services"
+                                           asp-action="Index">
+                                            Hizmetler
+                                        </a>
+                                    </li>
+                                    @* İleride ekleyeceğiz, şimdiden dursun: *@
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-area="Admin"
+                                           asp-controller="Trainers"
+                                           asp-action="Index">
+                                            Antrenörler
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                         }
+
                     </ul>
 
 

@@ -1,0 +1,59 @@
+﻿@model GymApp.Models.Service
+
+@{
+    ViewData["Title"] = "Yeni Hizmet";
+}
+
+<h1 class="mb-4">Yeni Hizmet Ekle</h1>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Hizmet Adı</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">Açıklama</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Category" class="form-label">Kategori</label>
+        <input asp-for="Category" class="form-control" />
+        <span asp-validation-for="Category" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DurationMinutes" class="form-label">Süre (dakika)</label>
+        <input asp-for="DurationMinutes" class="form-control" />
+        <span asp-validation-for="DurationMinutes" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label">Ücret (₺)</label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GymId" class="form-label"></label>
+        <select asp-for="GymId" class="form-select" asp-items="ViewBag.GymId">
+            <option value="">-- Spor Salonu Seçin --</option>
+        </select>
+        <span asp-validation-for="GymId" class="text-danger"></span>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Listeye Dön</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
