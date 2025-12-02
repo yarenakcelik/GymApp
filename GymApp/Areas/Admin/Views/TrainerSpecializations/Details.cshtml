@@ -1,0 +1,34 @@
+﻿@model GymApp.Models.TrainerSpecialization
+
+@{
+    ViewData["Title"] = "Uzmanlık Detayı";
+}
+
+<h2 class="mt-4 mb-3">Uzmanlık Detayı</h2>
+
+<div class="row">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">@Model.Name</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Uzmanlık Adı</dt>
+                    <dd class="col-sm-8">@Model.Name</dd>
+
+                    <dt class="col-sm-4">Açıklama</dt>
+                    <dd class="col-sm-8">@Model.Description</dd>
+                </dl>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    Listeye Dön
+                </a>
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                    Düzenle
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

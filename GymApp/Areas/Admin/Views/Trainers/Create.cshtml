@@ -1,0 +1,76 @@
+﻿@model GymApp.Models.Trainer
+
+@{
+    ViewData["Title"] = "Yeni Antrenör";
+}
+
+<h1 class="mb-4">Yeni Antrenör Ekle</h1>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="FullName" class="form-label">Ad Soyad</label>
+            <input asp-for="FullName" class="form-control" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="GymId" class="form-label">Spor Salonu</label>
+            <select asp-for="GymId" class="form-select" asp-items="ViewBag.GymId">
+                <option value="">-- Spor Salonu Seçin --</option>
+            </select>
+            <span asp-validation-for="GymId" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="TrainerSpecializationId" class="form-label">Uzmanlık Alanı</label>
+            <select asp-for="TrainerSpecializationId" class="form-select" asp-items="ViewBag.TrainerSpecializationId">
+                <option value="">Seçiniz...</option>
+            </select>
+            <span asp-validation-for="TrainerSpecializationId" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Email" class="form-label">E-posta</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Phone" class="form-label">Telefon</label>
+            <input asp-for="Phone" class="form-control" />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label asp-for="AvailableFrom" class="form-label">Müsaitlik Başlangıcı</label>
+            <input asp-for="AvailableFrom" class="form-control" type="time" />
+            <span asp-validation-for="AvailableFrom" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label asp-for="AvailableTo" class="form-label">Müsaitlik Bitişi</label>
+            <input asp-for="AvailableTo" class="form-control" type="time" />
+            <span asp-validation-for="AvailableTo" class="text-danger"></span>
+        </div>
+
+        <div class="col-12 mb-3">
+            <label asp-for="Bio" class="form-label">Biyografi</label>
+            <textarea asp-for="Bio" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Bio" class="text-danger"></span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Listeye Dön</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

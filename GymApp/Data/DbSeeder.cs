@@ -57,6 +57,22 @@ namespace GymApp.Data
             {
                 await userManager.AddToRoleAsync(adminUser, "Admin");
             }
+
+            // 4) Örnek Trainer Specialization'lar
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            if (!context.TrainerSpecializations.Any())
+            {
+                context.TrainerSpecializations.AddRange(
+                    new TrainerSpecialization { Name = "Kas Geliştirme", Description = "Hipertrofi odaklı antrenman" },
+                    new TrainerSpecialization { Name = "Kilo Verme", Description = "Yağ yakım odaklı programlar" },
+                    new TrainerSpecialization { Name = "Fonksiyonel Antrenman", Description = "Mobilite ve güç odaklı" },
+                    new TrainerSpecialization { Name = "Yoga/Pilates", Description = "Esneklik ve denge" }
+                );
+
+                await context.SaveChangesAsync();
+            }
+
         }
     }
 }

@@ -1,0 +1,92 @@
+﻿@model GymApp.Models.Trainer
+
+@{
+    ViewData["Title"] = "Antrenörü Düzenle";
+}
+
+<h2 class="mt-4 mb-3">Antrenörü Düzenle</h2>
+
+<div class="row">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning">
+                <h5 class="mb-0">Antrenör Bilgileri</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label">Ad Soyad</label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="GymId" class="form-label">Spor Salonu</label>
+                        <select asp-for="GymId" class="form-select" asp-items="ViewBag.GymId">
+                            <option value="">-- Spor Salonu Seçin --</option>
+                        </select>
+                        <span asp-validation-for="GymId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TrainerSpecializationId" class="form-label">Uzmanlık Alanı</label>
+                        <select asp-for="TrainerSpecializationId" class="form-select" asp-items="ViewBag.TrainerSpecializationId">
+                            <option value="">Seçiniz...</option>
+                        </select>
+                        <span asp-validation-for="TrainerSpecializationId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">E-posta</label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Phone" class="form-label">Telefon</label>
+                        <input asp-for="Phone" class="form-control" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="AvailableFrom" class="form-label">Müsaitlik Başlangıcı</label>
+                        <input asp-for="AvailableFrom" class="form-control" type="time" />
+                        <span asp-validation-for="AvailableFrom" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="AvailableTo" class="form-label">Müsaitlik Bitişi</label>
+                        <input asp-for="AvailableTo" class="form-control" type="time" />
+                        <span asp-validation-for="AvailableTo" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Bio" class="form-label">Biyografi</label>
+                        <textarea asp-for="Bio" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Bio" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            Listeye Dön
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            Kaydet
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
