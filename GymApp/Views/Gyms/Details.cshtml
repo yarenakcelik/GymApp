@@ -1,0 +1,30 @@
+﻿@model GymApp.Models.Gym
+
+@{
+    ViewData["Title"] = "Spor Salonu Detayı";
+}
+
+<h2 class="mt-4 mb-3">@Model.Name</h2>
+
+<div class="row">
+    <div class="col-lg-7">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Salon Bilgileri</h5>
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Adres</dt>
+                    <dd class="col-sm-8">@Model.Address</dd>
+
+                    <dt class="col-sm-4">Çalışma Saatleri</dt>
+                    <dd class="col-sm-8">
+                        @Model.OpenTime - @Model.CloseTime
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary">
+    Tüm Salonlara Dön
+</a>

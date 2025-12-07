@@ -1,0 +1,45 @@
+﻿@model IEnumerable<GymApp.Models.Gym>
+
+@{
+    ViewData["Title"] = "Spor Salonları";
+}
+
+<h2 class="mt-4 mb-3">Spor Salonları</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Şu anda sistemde kayıtlı spor salonu bulunmamaktadır.
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var gym in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@gym.Name</h5>
+                        <p class="card-text text-muted mb-2">
+                            @gym.Address
+                        </p>
+
+                        <p class="card-text small mb-2">
+                            <strong>Çalışma Saatleri:</strong><br />
+                            @gym.OpenTime - @gym.CloseTime
+                        </p>
+
+                        <div class="mt-auto">
+                            <a asp-action="Details"
+                               asp-route-id="@gym.Id"
+                               class="btn btn-outline-primary btn-sm">
+                                Detayları Gör
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
