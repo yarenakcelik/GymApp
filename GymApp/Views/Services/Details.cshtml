@@ -50,12 +50,19 @@
                         @foreach (var t in trainers)
                         {
                             <li class="list-group-item">
-                                <strong>@t.FullName</strong><br />
+                                <strong>
+                                    <a asp-controller="Trainers"
+                                       asp-action="Details"
+                                       asp-route-id="@t.Id">
+                                        @t.FullName
+                                    </a>
+                                </strong><br />
                                 <span class="small text-muted">
                                     @(t.TrainerSpecialization?.Name ?? "Uzmanlık belirtilmemiş")
                                 </span>
                             </li>
                         }
+
                     </ul>
                 }
                 else

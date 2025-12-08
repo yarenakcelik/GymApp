@@ -1,0 +1,117 @@
+﻿@model GymApp.Models.Trainer
+
+@{
+    ViewData["Title"] = "Antrenör Profili";
+    var services = Model.TrainerServices?
+        .Select(ts => ts.Service)
+        .Where(s => s != null)
+        .Distinct()
+        .ToList();
+}
+
+<h2 class="mt-4 mb-3">@Model.FullName</h2>
+
+<div class="row">
+    <div class="col-lg-7">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Genel Bilgiler</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Spor Salonu</dt>
+                    <dd class="col-sm-8">@Model.Gym?.Name</dd>
+
+                    <dt class="col-sm-4">Uzmanlık Alanı</dt>
+                    <dd class="col-sm-8">
+                        @(Model.TrainerSpecialization?.Name ?? "Belirtilmemiş")
+                    </dd>
+
+                    <dt class="col-sm-4">E-posta</dt>
+                    <dd class="col-sm-8">
+                        @(string.IsNullOrWhiteSpace(Model.Email) ? "—" : Model.Email)
+                    </dd>
+
+                    <dt class="col-sm-4">Telefon</dt>
+                    <dd class="col-sm-8">
+                        @(string.IsNullOrWhiteSpace(Model.Phone) ? "—" : Model.Phone)
+                    </dd>
+
+                    <dt class="col-sm-4">Müsaitlik</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.AvailableFrom.HasValue && Model.AvailableTo.HasValue)
+                        {
+                            @Model.AvailableFrom.Value.ToString(@"hh\:mm")
+                            @: -
+                            @Model.AvailableTo.Value.ToString(@"hh\:mm")
+                        }
+                        else
+                        {
+                            @:Belirtilmemiş
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Biyografi</h5>
+            </div>
+            <div class="card-body">
+                @if (string.IsNullOrWhiteSpace(Model.Bio))
+                {
+                    <p class="text-muted mb-0">
+                        Bu antrenör için henüz biyografi eklenmemiş.
+                    </p>
+                }
+                else
+                {
+                    <p class="mb-0">@Model.Bio</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Verdiği Hizmetler</h5>
+            </div>
+            <div class="card-body">
+                @if (services != null && services.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var s in services)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>@s.Name</strong><br />
+                                    <span class="small text-muted">
+                                        @s.Category - @s.DurationMinutes dk
+                                    </span>
+                                </div>
+                                <a asp-controller="Services"
+                                   asp-action="Details"
+                                   asp-route-id="@s.Id"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Hizmeti Gör
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">
+                        Bu antrenöre henüz hizmet atanmadı.
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary">
+    Tüm Antrenörlere Dön
+</a>
