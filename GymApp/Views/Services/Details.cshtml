@@ -1,0 +1,74 @@
+﻿@model GymApp.Models.Service
+
+@{
+    ViewData["Title"] = "Hizmet Detayı";
+}
+
+<h2 class="mt-4 mb-3">@Model.Name</h2>
+
+<div class="row">
+    <div class="col-lg-7">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Hizmet Bilgileri</h5>
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Açıklama</dt>
+                    <dd class="col-sm-8">@Model.Description</dd>
+
+                    <dt class="col-sm-4">Kategori</dt>
+                    <dd class="col-sm-8">@Model.Category</dd>
+
+                    <dt class="col-sm-4">Süre</dt>
+                    <dd class="col-sm-8">@Model.DurationMinutes dk</dd>
+
+                    <dt class="col-sm-4">Ücret</dt>
+                    <dd class="col-sm-8">@Model.Price.ToString("N2") ₺</dd>
+
+                    <dt class="col-sm-4">Spor Salonu</dt>
+                    <dd class="col-sm-8">@Model.Gym?.Name</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Bu Hizmeti Veren Antrenörler</h5>
+
+                @{
+                    var trainers = Model.TrainerServices?
+                    .Select(ts => ts.Trainer)
+                    .Where(t => t != null)
+                    .Distinct()
+                    .ToList();
+                }
+
+                @if (trainers != null && trainers.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var t in trainers)
+                        {
+                            <li class="list-group-item">
+                                <strong>@t.FullName</strong><br />
+                                <span class="small text-muted">
+                                    @(t.TrainerSpecialization?.Name ?? "Uzmanlık belirtilmemiş")
+                                </span>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">
+                        Bu hizmet için atanmış antrenör bulunmuyor.
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary">
+    Tüm Hizmetlere Dön
+</a>

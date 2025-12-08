@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,7 +23,10 @@ namespace GymApp.Areas.Admin.Controllers
         // GET: Admin/Trainers
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Trainers.Include(t => t.Gym).Include(t => t.TrainerSpecialization);
+            var applicationDbContext = _context.Trainers
+                .Include(t => t.Gym)
+                .Include(t => t.TrainerSpecialization);
+
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -41,6 +42,7 @@ namespace GymApp.Areas.Admin.Controllers
                 .Include(t => t.Gym)
                 .Include(t => t.TrainerSpecialization)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (trainer == null)
             {
                 return NotFound();
@@ -50,30 +52,57 @@ namespace GymApp.Areas.Admin.Controllers
         }
 
         // GET: Admin/Trainers/Create
+        // GET: Admin/Trainers/Create
         public IActionResult Create()
         {
             ViewData["GymId"] = new SelectList(_context.Gyms, "Id", "Name");
             ViewData["TrainerSpecializationId"] = new SelectList(_context.TrainerSpecializations, "Id", "Name");
+            ViewBag.Services = _context.Services.ToList();   // ✔ Hizmet listesi
             return View();
         }
 
         // POST: Admin/Trainers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FullName,Email,Phone,Bio,GymId,TrainerSpecializationId,AvailableFrom,AvailableTo")] Trainer trainer)
+        public async Task<IActionResult> Create(
+            [Bind("Id,FullName,Email,Phone,Bio,GymId,TrainerSpecializationId,AvailableFrom,AvailableTo")] Trainer trainer,
+            int[] selectedServiceIds)   // ✔ Seçili hizmet ID’leri
         {
+            // En az bir hizmet seçildi mi kontrol et
+            if (selectedServiceIds == null || selectedServiceIds.Length == 0)
+            {
+                ModelState.AddModelError("SelectedServiceIds", "En az bir hizmet seçmelisiniz.");
+            }
+
             if (ModelState.IsValid)
             {
+                // Önce antrenörü kaydet
                 _context.Add(trainer);
                 await _context.SaveChangesAsync();
+
+                // Sonra seçili hizmetler için TrainerService kayıtları oluştur
+                foreach (var serviceId in selectedServiceIds)
+                {
+                    _context.TrainerServices.Add(new TrainerService
+                    {
+                        TrainerId = trainer.Id,
+                        ServiceId = serviceId
+                    });
+                }
+
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
+
+            // ModelState geçersizse dropdown ve hizmet listesini tekrar doldur
             ViewData["GymId"] = new SelectList(_context.Gyms, "Id", "Name", trainer.GymId);
             ViewData["TrainerSpecializationId"] = new SelectList(_context.TrainerSpecializations, "Id", "Name", trainer.TrainerSpecializationId);
+            ViewBag.Services = _context.Services.ToList();
+
             return View(trainer);
         }
+
 
         // GET: Admin/Trainers/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -88,14 +117,13 @@ namespace GymApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+
             ViewData["GymId"] = new SelectList(_context.Gyms, "Id", "Name", trainer.GymId);
             ViewData["TrainerSpecializationId"] = new SelectList(_context.TrainerSpecializations, "Id", "Name", trainer.TrainerSpecializationId);
             return View(trainer);
         }
 
         // POST: Admin/Trainers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,FullName,Email,Phone,Bio,GymId,TrainerSpecializationId,AvailableFrom,AvailableTo")] Trainer trainer)
@@ -125,6 +153,7 @@ namespace GymApp.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["GymId"] = new SelectList(_context.Gyms, "Id", "Name", trainer.GymId);
             ViewData["TrainerSpecializationId"] = new SelectList(_context.TrainerSpecializations, "Id", "Name", trainer.TrainerSpecializationId);
             return View(trainer);
@@ -142,6 +171,7 @@ namespace GymApp.Areas.Admin.Controllers
                 .Include(t => t.Gym)
                 .Include(t => t.TrainerSpecialization)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (trainer == null)
             {
                 return NotFound();
@@ -162,6 +192,70 @@ namespace GymApp.Areas.Admin.Controllers
             }
 
             await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Admin/Trainers/ManageServices/5
+        public async Task<IActionResult> ManageServices(int id)
+        {
+            var trainer = await _context.Trainers
+                .Include(t => t.TrainerServices)
+                    .ThenInclude(ts => ts.Service)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (trainer == null)
+                return NotFound();
+
+            var allServices = await _context.Services.ToListAsync();
+            var selectedIds = trainer.TrainerServices
+                .Select(ts => ts.ServiceId)
+                .ToHashSet();
+
+            var viewModel = new TrainerServicesViewModel
+            {
+                TrainerId = trainer.Id,
+                TrainerName = trainer.FullName,
+                Services = allServices.Select(s => new ServiceCheckboxItem
+                {
+                    ServiceId = s.Id,
+                    Name = s.Name,
+                    IsSelected = selectedIds.Contains(s.Id)
+                }).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        // POST: Admin/Trainers/ManageServices
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ManageServices(TrainerServicesViewModel model)
+        {
+            var trainer = await _context.Trainers
+                .Include(t => t.TrainerServices)
+                .FirstOrDefaultAsync(t => t.Id == model.TrainerId);
+
+            if (trainer == null)
+                return NotFound();
+
+            // Eski eşleştirmeleri sil
+            _context.TrainerServices.RemoveRange(trainer.TrainerServices);
+
+            // Yeni seçilen hizmetler için kayıt ekle
+            if (model.SelectedServiceIds != null)
+            {
+                foreach (var serviceId in model.SelectedServiceIds)
+                {
+                    _context.TrainerServices.Add(new TrainerService
+                    {
+                        TrainerId = trainer.Id,
+                        ServiceId = serviceId
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

@@ -1,0 +1,52 @@
+﻿@model IEnumerable<GymApp.Models.Service>
+
+@{
+    ViewData["Title"] = "Hizmetler";
+}
+
+<h2 class="mt-4 mb-3">Hizmetler</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Şu anda sistemde kayıtlı hizmet bulunmamaktadır.
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var s in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@s.Name</h5>
+                        <p class="card-text text-muted mb-1">
+                            @s.Category
+                        </p>
+
+                        <p class="card-text small mb-1">
+                            <strong>Salon:</strong> @s.Gym?.Name
+                        </p>
+
+                        <p class="card-text small mb-1">
+                            <strong>Süre:</strong> @s.DurationMinutes dk
+                        </p>
+
+                        <p class="card-text small mb-2">
+                            <strong>Ücret:</strong> @s.Price.ToString("N2") ₺
+                        </p>
+
+                        <div class="mt-auto">
+                            <a asp-action="Details"
+                               asp-route-id="@s.Id"
+                               class="btn btn-outline-primary btn-sm">
+                                Detayları Gör
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
