@@ -1,0 +1,78 @@
+﻿@model GymApp.Models.Appointment
+
+@{
+    ViewData["Title"] = "Randevu Al";
+    var service = ViewBag.Service as GymApp.Models.Service;
+    var trainers = ViewBag.Trainers as List<GymApp.Models.Trainer>;
+    int selectedTrainerId = ViewBag.SelectedTrainerId ?? 0;
+}
+
+<h2 class="mt-4 mb-3">Randevu Al</h2>
+
+<form asp-action="Create" method="post">
+    @* ServiceId’yi formda gizli olarak gönderiyoruz *@
+    <input asp-for="ServiceId" type="hidden" />
+
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">@service?.Name</h5>
+            <p class="mb-1">
+                <strong>Süre:</strong> @service?.DurationMinutes dk,
+                <strong>Ücret:</strong> @service?.Price.ToString("N2") ₺
+
+            </p>
+            <p class="mb-1">
+                <strong>Spor Salonu:</strong> @service?.Gym?.Name
+            </p>
+            <p class="mb-0">
+                <strong>Kategori:</strong> @service?.Category
+            </p>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TrainerId" class="form-label">Antrenör</label>
+        <select asp-for="TrainerId" class="form-select">
+            @if (trainers != null)
+            {
+                foreach (var t in trainers)
+                {
+                    if (t.Id == selectedTrainerId)
+                    {
+                        <option value="@t.Id" selected="selected">
+                            @t.FullName (@t.Gym?.Name)
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="@t.Id">
+                            @t.FullName (@t.Gym?.Name)
+                        </option>
+                    }
+                }
+            }
+        </select>
+        <span asp-validation-for="TrainerId" class="text-danger"></span>
+    </div>
+
+
+    <div class="mb-3">
+        <label asp-for="StartTime" class="form-label">Başlangıç Tarih/Saat</label>
+        <input asp-for="StartTime" class="form-control" type="datetime-local" />
+        <span asp-validation-for="StartTime" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Randevuyu Kaydet</button>
+    <a asp-controller="Services"
+       asp-action="Details"
+       asp-route-id="@service?.Id"
+       class="btn btn-secondary ms-2">
+        Hizmete Geri Dön
+    </a>
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

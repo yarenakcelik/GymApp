@@ -62,7 +62,6 @@
                                 </span>
                             </li>
                         }
-
                     </ul>
                 }
                 else
@@ -76,6 +75,27 @@
     </div>
 </div>
 
-<a asp-action="Index" class="btn btn-secondary">
-    Tüm Hizmetlere Dön
-</a>
+<div class="mt-3 d-flex gap-2">
+    <a asp-action="Index" class="btn btn-secondary">
+        Tüm Hizmetlere Dön
+    </a>
+
+    @if (User.Identity?.IsAuthenticated ?? false)
+    {
+        <a asp-controller="Appointments"
+           asp-action="Create"
+           asp-route-serviceId="@Model.Id"
+           class="btn btn-success">
+            Randevu Al
+        </a>
+    }
+    else
+    {
+        <a asp-area="Identity"
+           asp-page="/Account/Login"
+           asp-route-returnUrl="@Url.Action("Details", "Services", new { id = Model.Id })"
+           class="btn btn-primary">
+            Randevu Almak İçin Giriş Yap
+        </a>
+    }
+</div>
