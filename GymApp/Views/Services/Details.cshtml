@@ -82,12 +82,14 @@
 
     @if (User.Identity?.IsAuthenticated ?? false)
     {
-        <a asp-controller="Appointments"
+        <a class="btn btn-primary"
+           asp-area=""
+           asp-controller="Appointments"
            asp-action="Create"
-           asp-route-serviceId="@Model.Id"
-           class="btn btn-success">
+           asp-route-serviceId="@Model.Id">
             Randevu Al
         </a>
+
     }
     else
     {

@@ -2,9 +2,29 @@
 
 @{
     ViewData["Title"] = "Randevularım";
+    var selectedStatus = ViewBag.SelectedStatus as string;
 }
 
 <h2 class="mt-4 mb-3">Randevularım</h2>
+
+<form method="get" class="mb-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-auto">
+            <label class="form-label">Duruma göre filtrele</label>
+            <select name="status" class="form-select">
+                <option value="All" selected="@(string.IsNullOrEmpty(selectedStatus) || selectedStatus == "All" ? "selected" : null)">Hepsi</option>
+                <option value="Pending" selected="@(selectedStatus == "Pending" ? "selected" : null)">Onay Bekliyor</option>
+                <option value="Approved" selected="@(selectedStatus == "Approved" ? "selected" : null)">Onaylandı</option>
+                <option value="Rejected" selected="@(selectedStatus == "Rejected" ? "selected" : null)">Reddedildi</option>
+                <option value="Cancelled" selected="@(selectedStatus == "Cancelled" ? "selected" : null)">İptal Edildi</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Filtrele</button>
+        </div>
+    </div>
+</form>
+
 
 @if (!Model.Any())
 {
@@ -21,6 +41,10 @@ else
                 <th>Spor Salonu</th>
                 <th>Antrenör</th>
                 <th>Başlangıç</th>
+                <th>Süre (dk)</th>
+                <th>Ücret</th>
+                <th>Durum</th>
+                <th>İşlemler</th>
             </tr>
         </thead>
         <tbody>
@@ -31,8 +55,53 @@ else
                     <td>@item.Service?.Gym?.Name</td>
                     <td>@item.Trainer?.FullName</td>
                     <td>@item.StartTime.ToString("g")</td>
+                    <td>@item.DurationMinutes</td>
+                    <td>@item.Price.ToString("N2") ₺</td>
+                    <td>
+                        @{
+                            var statusText = item.Status switch
+                            {
+                                "Pending" => "Onay Bekliyor",
+                                "Approved" => "Onaylandı",
+                                "Rejected" => "Reddedildi",
+                                "Cancelled" => "İptal Edildi",
+                                _ => item.Status
+                            };
+                        }
+                        @statusText
+                    </td>
+
+
+                    <td>
+                        @if (item.StartTime > DateTime.Now &&
+                                        item.Status != "Cancelled" &&
+                                        item.Status != "Rejected")
+                        {
+                            <a asp-action="Edit"
+                               asp-route-id="@item.Id"
+                               class="btn btn-sm btn-outline-primary me-1">
+                                Düzenle
+                            </a>
+
+                            <form asp-action="Cancel"
+                                  asp-route-id="@item.Id"
+                                  method="post"
+                                  class="d-inline">
+                                <button type="submit"
+                                        class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Bu randevuyu iptal etmek istediğinize emin misiniz?');">
+                                    İptal Et
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="text-muted">-</span>
+                        }
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
+
 }

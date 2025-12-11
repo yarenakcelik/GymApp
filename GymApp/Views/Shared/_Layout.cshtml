@@ -51,6 +51,16 @@
                         </li>
 
                         <li class="nav-item">
+                            <a class="nav-link text-dark"
+                               asp-area=""
+                               asp-controller="Appointments"
+                               asp-action="Index">
+                                Randevularım
+                            </a>
+                        </li>
+
+
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         @if (User.IsInRole("Admin"))
@@ -102,6 +112,16 @@
                                             Antrenörler
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-area="Admin"
+                                           asp-controller="Appointments"
+                                           asp-action="Index">
+                                            Randevular
+                                        </a>
+                                    </li>
+                                    
+
                                 </ul>
                             </li>
                         }

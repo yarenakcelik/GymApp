@@ -1,0 +1,189 @@
+﻿// GET: /Appointments/Edit/5
+public async Task<IActionResult>
+    Edit(int id)
+    {
+    var user = await _userManager.GetUserAsync(User);
+    if (user == null)
+    return Challenge();
+
+    var member = await _context.MemberProfiles
+    .FirstOrDefaultAsync(m => m.ApplicationUserId == user.Id);
+
+    if (member == null)
+    return RedirectToAction("Create", "MemberProfiles");
+
+    var appointment = await _context.Appointments
+    .Include(a => a.Service)
+    .ThenInclude(s => s.Gym)
+    .Include(a => a.Service)
+    .ThenInclude(s => s.TrainerServices)
+    .ThenInclude(ts => ts.Trainer)
+    .FirstOrDefaultAsync(a => a.Id == id && a.MemberProfileId == member.Id);
+
+    if (appointment == null)
+    return NotFound();
+
+    if (appointment.StartTime <= DateTime.Now)
+    {
+    TempData["ErrorMessage"] = "Geçmiş randevular düzenlenemez.";
+    return RedirectToAction(nameof(Index));
+    }
+
+    var service = appointment.Service;
+    var trainers = service.TrainerServices
+    .Select(ts => ts.Trainer)
+    .Where(t => t != null)
+    .Distinct()
+    .ToList();
+
+    ViewBag.Service = service;
+    ViewBag.Trainers = trainers;
+    ViewBag.SelectedTrainerId = appointment.TrainerId;
+
+    return View(appointment);
+    }
+
+    // POST: /Appointments/Edit/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult>
+        Edit(int id, Appointment formAppointment)
+        {
+        if (id != formAppointment.Id)
+        return NotFound();
+
+        ModelState.Remove(nameof(Appointment.Service));
+        ModelState.Remove(nameof(Appointment.Trainer));
+        ModelState.Remove(nameof(Appointment.MemberProfile));
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        return Challenge();
+
+        var member = await _context.MemberProfiles
+        .FirstOrDefaultAsync(m => m.ApplicationUserId == user.Id);
+
+        if (member == null)
+        {
+        ModelState.AddModelError(string.Empty, "Önce profil oluşturmanız gerekiyor.");
+        }
+
+        var existing = await _context.Appointments
+        .Include(a => a.Service)
+        .ThenInclude(s => s.Gym)
+        .Include(a => a.Service)
+        .ThenInclude(s => s.TrainerServices)
+        .ThenInclude(ts => ts.Trainer)
+        .FirstOrDefaultAsync(a => a.Id == id && a.MemberProfileId == member.Id);
+
+        if (existing == null)
+        return NotFound();
+
+        var service = existing.Service;
+
+        if (member != null && service != null)
+        {
+        if (existing.StartTime <= DateTime.Now)
+        {
+        ModelState.AddModelError(string.Empty, "Geçmiş randevular düzenlenemez.");
+        }
+
+        // Kullanıcının seçtiği yeni değerleri uygula
+        existing.TrainerId = formAppointment.TrainerId;
+        existing.StartTime = formAppointment.StartTime;
+
+        // Süre ve ücreti servisten tekrar kopyala (değişmiş olabilir)
+        existing.DurationMinutes = service.DurationMinutes;
+        existing.Price = service.Price;
+
+        // Değişiklikten sonra tekrar onaya düşsün
+        existing.Status = "Pending";
+
+        // Çakışma kontrolleri
+        var newStart = existing.StartTime;
+        var newEnd = existing.StartTime.AddMinutes(existing.DurationMinutes);
+
+        // Aynı antrenörün başka randevusu var mı? (kendisi hariç)
+        var trainerConflict = await _context.Appointments
+        .Where(a => a.TrainerId == existing.TrainerId &&
+        a.Id != existing.Id &&
+        a.Status != "Cancelled" &&
+        a.Status != "Rejected")
+        .AnyAsync(a =>
+        newStart < a.StartTime.AddMinutes(a.DurationMinutes) &&
+        newEnd > a.StartTime);
+
+        if (trainerConflict)
+        {
+        ModelState.AddModelError("StartTime", "Bu antrenör seçtiğiniz saatte başka bir randevuya sahip.");
+        }
+
+        // Üyenin kendi randevuları ile çakışma var mı? (kendisi hariç)
+        var memberConflict = await _context.Appointments
+        .Where(a => a.MemberProfileId == member.Id &&
+        a.Id != existing.Id &&
+        a.Status != "Cancelled" &&
+        a.Status != "Rejected")
+        .AnyAsync(a =>
+        newStart < a.StartTime.AddMinutes(a.DurationMinutes) &&
+        newEnd > a.StartTime);
+
+        if (memberConflict)
+        {
+        ModelState.AddModelError("StartTime", "Bu saat aralığında zaten başka bir randevunuz bulunuyor.");
+        }
+        }
+
+        if (!ModelState.IsValid)
+        {
+        var trainers = service?.TrainerServices
+        .Select(ts => ts.Trainer)
+        .Where(t => t != null)
+        .Distinct()
+        .ToList() ?? new List<Trainer>
+            ();
+
+            ViewBag.Service = service;
+            ViewBag.Trainers = trainers;
+            ViewBag.SelectedTrainerId = existing.TrainerId;
+
+            return View(existing);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+            }
+
+            // POST: /Appointments/Cancel/5
+            [HttpPost]
+            [ValidateAntiForgeryToken]
+            public async Task<IActionResult>
+                Cancel(int id)
+                {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                return Challenge();
+
+                var member = await _context.MemberProfiles
+                .FirstOrDefaultAsync(m => m.ApplicationUserId == user.Id);
+
+                if (member == null)
+                return RedirectToAction(nameof(Index));
+
+                var appointment = await _context.Appointments
+                .FirstOrDefaultAsync(a => a.Id == id && a.MemberProfileId == member.Id);
+
+                if (appointment == null)
+                return NotFound();
+
+                if (appointment.StartTime <= DateTime.Now)
+                {
+                TempData["ErrorMessage"] = "Geçmiş randevular iptal edilemez.";
+                return RedirectToAction(nameof(Index));
+                }
+
+                appointment.Status = "Cancelled";
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+                }
