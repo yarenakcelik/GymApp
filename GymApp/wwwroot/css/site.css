@@ -1,4 +1,4 @@
-html {
+﻿html {
   font-size: 14px;
 }
 
@@ -20,3 +20,117 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* ---------- Global tiny polish ---------- */
+body {
+    margin-bottom: 60px;
+    background: #020617;
+}
+
+
+.navbar {
+    border-bottom: 1px solid rgba(0,0,0,.06) !important;
+}
+
+.container main {
+    padding-top: 10px;
+}
+
+/* ---------- Auth Pages (Login/Register) ---------- */
+.auth-page {
+    min-height: calc(100vh - 140px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 12px;
+    /* Spor salonu hissi */
+    background: radial-gradient(circle at top right, rgba(13,110,253,.25), transparent 40%), radial-gradient(circle at bottom left, rgba(111,66,193,.25), transparent 40%), linear-gradient(135deg, #0f172a, #020617);
+}
+
+
+.auth-card {
+    width: 100%;
+    max-width: 980px; /* solda form, sağda bilgi paneli için */
+    border: 0;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+    overflow: hidden;
+    background: #fff;
+}
+
+.auth-grid {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+}
+
+@media (max-width: 992px) {
+    .auth-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-side {
+        display: none;
+    }
+}
+
+.auth-form {
+    padding: 34px 32px;
+}
+
+.auth-title {
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+    margin-bottom: 6px;
+}
+
+.auth-subtitle {
+    color: #6c757d;
+    margin-bottom: 18px;
+}
+
+.auth-side {
+    padding: 34px 28px;
+    background: linear-gradient(135deg, rgba(13,110,253,.14), rgba(111,66,193,.12));
+}
+
+    .auth-side h3 {
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .auth-side p {
+        color: rgba(0,0,0,.65);
+    }
+
+.auth-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.75);
+    border: 1px solid rgba(0,0,0,.06);
+    margin-top: 10px;
+    width: 100%;
+}
+
+.auth-btn {
+    height: 46px;
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+.form-control {
+    height: 46px;
+    border-radius: 12px;
+}
+
+.auth-links a {
+    text-decoration: none;
+}
+
+    .auth-links a:hover {
+        text-decoration: underline;
+    }
+

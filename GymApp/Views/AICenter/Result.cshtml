@@ -1,0 +1,105 @@
+﻿@model GymApp.Models.ViewModels.AICenterViewModel
+@{
+    ViewData["Title"] = "AI Sonucu";
+}
+
+<style>
+    .ai-card {
+        border-radius: 16px;
+        border: 1px solid rgba(0,0,0,.08);
+        box-shadow: 0 8px 24px rgba(0,0,0,.06);
+        overflow: hidden;
+    }
+
+    .ai-card-header {
+        padding: 18px 20px;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        color: white;
+    }
+
+        .ai-card-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: .2px;
+        }
+
+    .ai-card-body {
+        padding: 18px 20px;
+        background: white;
+    }
+
+    .ai-meta {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+        opacity: .95;
+        font-size: 13px;
+    }
+
+    .ai-pill {
+        background: rgba(255,255,255,.18);
+        border: 1px solid rgba(255,255,255,.25);
+        padding: 6px 10px;
+        border-radius: 999px;
+    }
+
+    .ai-result h4 {
+        margin-top: 18px;
+        font-weight: 800;
+        font-size: 18px;
+    }
+
+    .ai-result h5 {
+        margin-top: 14px;
+        font-weight: 700;
+        font-size: 16px;
+    }
+
+    .ai-result .day {
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(0,0,0,.08);
+        background: #f8fafc;
+        margin-top: 10px;
+    }
+
+    .ai-result ul {
+        margin-bottom: 0;
+    }
+</style>
+
+<div class="ai-card mt-4">
+    <div class="ai-card-header">
+        <h2>AI Sonucu</h2>
+
+        <div class="ai-meta">
+            <span class="ai-pill">Hedef: @Model.Request.Goal</span>
+            <span class="ai-pill">Seviye: @Model.Request.Level</span>
+            <span class="ai-pill">Gün: @Model.Request.DaysPerWeek</span>
+            <span class="ai-pill">Ekipman: @Model.Request.Equipment</span>
+        </div>
+    </div>
+
+    <div class="ai-card-body">
+        @if (!string.IsNullOrWhiteSpace(Model.Error))
+        {
+            <div class="alert alert-danger mb-3">
+                <strong>Hata:</strong> @Model.Error
+            </div>
+
+            <a asp-action="Index" class="btn btn-outline-secondary">Geri Dön</a>
+        }
+        else
+        {
+            <div class="ai-result">
+                @Html.Raw(Model.Result)
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+                <a asp-action="Index" class="btn btn-outline-primary">Yeni Öneri Al</a>
+            </div>
+        }
+    </div>
+</div>

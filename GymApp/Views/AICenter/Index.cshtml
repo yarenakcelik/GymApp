@@ -1,0 +1,86 @@
+﻿@model GymApp.Models.ViewModels.AICenterViewModel
+@{
+    ViewData["Title"] = "AI Center";
+}
+
+<h2 class="mt-4 mb-2">AI Center</h2>
+<p class="text-muted">
+    Hedefinize göre antrenman + beslenme önerisi alabilir, ayrıca sistemdeki hizmetlerden size uygun olanları görebilirsiniz.
+</p>
+
+@if (!string.IsNullOrWhiteSpace(Model.Error))
+{
+    <div class="alert alert-danger">
+        <strong>AI servisine bağlanırken hata oluştu:</strong> @Model.Error
+    </div>
+}
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form asp-action="Index" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label class="form-label">Hedef</label>
+                        <select asp-for="Request.Goal" class="form-select">
+                            <option value="Kilo Verme">Kilo Verme</option>
+                            <option value="Kas Geliştirme">Kas Geliştirme</option>
+                            <option value="Fit / Kondisyon">Fit / Kondisyon</option>
+                        </select>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Yaş</label>
+                            <input asp-for="Request.Age" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Boy (cm)</label>
+                            <input asp-for="Request.HeightCm" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Kilo (kg)</label>
+                            <input asp-for="Request.WeightKg" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mt-2">
+                        <div class="col-md-6">
+                            <label class="form-label">Seviye</label>
+                            <select asp-for="Request.Level" class="form-select">
+                                <option value="Başlangıç">Başlangıç</option>
+                                <option value="Orta">Orta</option>
+                                <option value="İleri">İleri</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Haftada kaç gün?</label>
+                            <input asp-for="Request.DaysPerWeek" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="mt-2 mb-3">
+                        <label class="form-label">Ekipman Tercihi</label>
+                        <select asp-for="Request.Equipment" class="form-select">
+                            <option value="Ekipmansız">Ekipmansız</option>
+                            <option value="Ev / Dumbbell">Ev / Dumbbell</option>
+                            <option value="Salon / Makineler">Salon / Makineler</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        Öneri Al
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="alert alert-info h-100 d-flex align-items-center justify-content-center text-center">
+            AI önerisi almak için soldaki formu doldurup <b>Öneri Al</b>'a bas.
+        </div>
+    </div>
+</div>
