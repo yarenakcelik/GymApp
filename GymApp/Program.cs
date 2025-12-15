@@ -3,7 +3,9 @@ using GymApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using GymApp; // DummyEmailSender için (namespace ayn?ysa bu da laz?m olabilir)
+using GymApp;
+using GymApp.Services;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +41,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 
 builder.Services.AddSingleton<IEmailSender, DummyEmailSender>();
+
+builder.Services.AddHttpClient<AiService>();
+
 
 
 // MVC + Razor Pages (Identity ekranlar? için ?art)
