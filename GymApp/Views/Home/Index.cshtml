@@ -2,149 +2,212 @@
     ViewData["Title"] = "Ana Sayfa";
 }
 
-<section class="home-hero">
-    <div class="container home-hero-inner">
-        <div class="row align-items-center g-4">
-            <div class="col-lg-7">
-                <div class="home-badge">GymApp • Randevu • AI • Rapor</div>
-                <h1 class="home-title">
-                    Hedefine <span class="home-title-accent">akıllı</span> şekilde ilerle.
-                </h1>
-                <p class="home-subtitle">
-                    Antrenörlerini ve hizmetleri incele, randevunu planla, raporlarla takip et.
-                    AI Center ile sana özel öneri al.
-                </p>
-
-                <div class="home-cta">
-                    <a class="btn btn-primary home-btn" asp-controller="Appointments" asp-action="Index">
-                        Randevularım
-                    </a>
-                    <a class="btn btn-outline-light home-btn" asp-controller="AICenter" asp-action="Index">
-                        AI Center
-                    </a>
-                    <a class="btn btn-outline-light home-btn" asp-controller="Reports" asp-action="Trainers">
-                        Raporlar
-                    </a>
-                </div>
-
-                <div class="home-mini mt-4">
-                    <div class="home-mini-card">
-                        <div class="home-mini-kpi">Hızlı</div>
-                        <div class="home-mini-text">Randevu oluştur & yönet</div>
-                    </div>
-                    <div class="home-mini-card">
-                        <div class="home-mini-kpi">Akıllı</div>
-                        <div class="home-mini-text">AI ile öneri al</div>
-                    </div>
-                    <div class="home-mini-card">
-                        <div class="home-mini-kpi">Takip</div>
-                        <div class="home-mini-text">Raporlarla analiz et</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-5">
-                <div class="home-glass">
-                    <div class="home-glass-title">Hızlı Erişim</div>
-
-                    <a class="home-glass-item" asp-controller="Appointments" asp-action="Index">
-                        <div class="home-ico">📅</div>
-                        <div>
-                            <div class="home-glass-item-title">Randevularım</div>
-                            <div class="home-glass-item-text">Mevcut randevuları görüntüle / yönet</div>
-                        </div>
-                    </a>
-
-                    <a class="home-glass-item" asp-controller="Reports" asp-action="Trainers">
-                        <div class="home-ico">📊</div>
-                        <div>
-                            <div class="home-glass-item-title">Raporlar</div>
-                            <div class="home-glass-item-text">Antrenör / sistem raporlarını incele</div>
-                        </div>
-                    </a>
-
-                    <a class="home-glass-item" asp-controller="AICenter" asp-action="Index">
-                        <div class="home-ico">🤖</div>
-                        <div>
-                            <div class="home-glass-item-title">AI Center</div>
-                            <div class="home-glass-item-text">Kişisel öneri ve analiz ekranı</div>
-                        </div>
-                    </a>
-
-                    <div class="home-glass-divider"></div>
-
-                    <div class="home-glass-small">
-                        Not: Diğer modüllere aşağıdan da geçebilirsin.
-                    </div>
-                </div>
-            </div>
+<!-- HERO -->
+<section class="hp-hero">
+    <div class="hp-hero__inner">
+        <div class="hp-chip">
+            <span class="hp-chip__icon">⚡</span>
+            GymApp • Randevu • AI • Rapor
         </div>
-    </div>
-</section>
 
-<section class="container home-section">
-    <div class="home-section-head">
-        <h2 class="home-section-title">Keşfet</h2>
-        <p class="home-section-sub">Salonlar, hizmetler ve antrenörlere hızlıca ulaş.</p>
-    </div>
+        <h1 class="hp-title">
+            Hedefine <span>akıllı</span> şekilde ilerle.
+        </h1>
 
-    <div class="row g-4">
-        <div class="col-md-4">
-            <a class="home-card" asp-controller="Gyms" asp-action="Index">
-                <div class="home-card-ico">🏋️</div>
-                <div class="home-card-title">Salonlar</div>
-                <div class="home-card-text">Spor salonlarını incele, detaylara git.</div>
-                <div class="home-card-link">Listeye git →</div>
+        <p class="hp-subtitle">
+            Salonları, hizmetleri ve antrenörleri incele; randevunu planla.
+            AI Center ile sana özel öneri al, raporlarla takip et.
+        </p>
+
+        <div class="hp-cta">
+            <a class="hp-btn hp-btn--primary" asp-controller="Services" asp-action="Index">
+                <span>🎯</span>
+                Randevu Al
             </a>
-        </div>
-
-        <div class="col-md-4">
-            <a class="home-card" asp-controller="Services" asp-action="Index">
-                <div class="home-card-ico">🧾</div>
-                <div class="home-card-title">Hizmetler</div>
-                <div class="home-card-text">Programlar ve hizmet çeşitlerini görüntüle.</div>
-                <div class="home-card-link">Listeye git →</div>
+            <a class="hp-btn" asp-controller="Appointments" asp-action="Index">
+                <span>📅</span>
+                Randevularım
             </a>
-        </div>
-
-        <div class="col-md-4">
-            <a class="home-card" asp-controller="Trainers" asp-action="Index">
-                <div class="home-card-ico">🧑‍🏫</div>
-                <div class="home-card-title">Antrenörler</div>
-                <div class="home-card-text">Uzmanlık alanlarına göre antrenörleri keşfet.</div>
-                <div class="home-card-link">Listeye git →</div>
+            <a class="hp-btn" asp-controller="AICenter" asp-action="Index">
+                <span>🤖</span>
+                AI Center
             </a>
         </div>
     </div>
 </section>
 
-<section class="home-strip">
-    <div class="container">
-        <div class="row text-center g-3">
-            <div class="col-6 col-lg-3">
-                <div class="home-stat">
-                    <div class="home-stat-big">2500+</div>
-                    <div class="home-stat-small">Aktif Üye</div>
+<!-- ANA ÖZELLİKLER - 4 TEMEL MODÜL -->
+<section class="hp-section">
+    <div class="hp-section__head">
+        <h2 class="hp-h2">Ana Özellikler</h2>
+        <p class="hp-muted">Platformun temel işlevlerine hızlıca eriş.</p>
+    </div>
+
+    <div class="hp-grid hp-grid--features">
+        <a class="hp-feature-card hp-feature-card--primary" asp-controller="Appointments" asp-action="Index">
+            <div class="hp-feature-card__glow"></div>
+            <div class="hp-feature-card__icon">📅</div>
+            <div class="hp-feature-card__content">
+                <h3 class="hp-feature-card__title">Randevularım</h3>
+                <p class="hp-feature-card__desc">Mevcut randevularını görüntüle, düzenle ve yönet. Geçmiş randevularını incele.</p>
+                <div class="hp-feature-card__link">
+                    Randevulara Git
+                    <span class="hp-feature-card__arrow">→</span>
                 </div>
             </div>
-            <div class="col-6 col-lg-3">
-                <div class="home-stat">
-                    <div class="home-stat-big">50+</div>
-                    <div class="home-stat-small">Uzman Antrenör</div>
+        </a>
+
+        <a class="hp-feature-card hp-feature-card--success" asp-controller="Services" asp-action="Index">
+            <div class="hp-feature-card__glow"></div>
+            <div class="hp-feature-card__icon">🧾</div>
+            <div class="hp-feature-card__content">
+                <h3 class="hp-feature-card__title">Randevu Al</h3>
+                <p class="hp-feature-card__desc">Hizmet seç, uygun antrenörü bul ve randevunu hemen oluştur.</p>
+                <div class="hp-feature-card__link">
+                    Randevu Oluştur
+                    <span class="hp-feature-card__arrow">→</span>
                 </div>
             </div>
-            <div class="col-6 col-lg-3">
-                <div class="home-stat">
-                    <div class="home-stat-big">10k+</div>
-                    <div class="home-stat-small">Başarı Hikayesi</div>
+        </a>
+
+        <a class="hp-feature-card hp-feature-card--ai" asp-controller="AICenter" asp-action="Index">
+            <div class="hp-feature-card__glow"></div>
+            <div class="hp-feature-card__icon">🤖</div>
+            <div class="hp-feature-card__content">
+                <h3 class="hp-feature-card__title">AI Center</h3>
+                <p class="hp-feature-card__desc">Yapay zeka destekli kişisel öneri ve analiz sistemi. Sana özel egzersiz planları.</p>
+                <div class="hp-feature-card__link">
+                    AI'ya Git
+                    <span class="hp-feature-card__arrow">→</span>
                 </div>
             </div>
-            <div class="col-6 col-lg-3">
-                <div class="home-stat">
-                    <div class="home-stat-big">15+</div>
-                    <div class="home-stat-small">Hizmet Çeşidi</div>
+        </a>
+
+        <a class="hp-feature-card hp-feature-card--info" asp-controller="Reports" asp-action="Trainers">
+            <div class="hp-feature-card__glow"></div>
+            <div class="hp-feature-card__icon">📊</div>
+            <div class="hp-feature-card__content">
+                <h3 class="hp-feature-card__title">Antrenör Raporları</h3>
+                <p class="hp-feature-card__desc">REST API ile desteklenen detaylı antrenör performans ve müsaitlik raporları.</p>
+                <div class="hp-feature-card__link">
+                    Raporları Görüntüle
+                    <span class="hp-feature-card__arrow">→</span>
                 </div>
             </div>
+        </a>
+    </div>
+</section>
+
+<!-- HIZLI ERİŞİM -->
+<section class="hp-section">
+    <div class="hp-section__head">
+        <h2 class="hp-h2">Hızlı Erişim</h2>
+        <p class="hp-muted">Salonlar, hizmetler ve antrenörlere tek tıkla ulaş.</p>
+    </div>
+
+    <div class="hp-grid hp-grid--3">
+        <a class="hp-card" asp-controller="Gyms" asp-action="Index">
+            <div class="hp-card__icon">🏟️</div>
+            <div class="hp-card__title">Salonlar</div>
+            <div class="hp-card__desc">Spor salonlarını incele, çalışma saatlerini ve hizmetleri görüntüle.</div>
+            <div class="hp-card__link">Keşfet →</div>
+        </a>
+
+        <a class="hp-card" asp-controller="Services" asp-action="Index">
+            <div class="hp-card__icon">💪</div>
+            <div class="hp-card__title">Hizmetler</div>
+            <div class="hp-card__desc">Fitness, yoga, pilates ve daha fazla program seçeneği.</div>
+            <div class="hp-card__link">Keşfet →</div>
+        </a>
+
+        <a class="hp-card" asp-controller="Trainers" asp-action="Index">
+            <div class="hp-card__icon">🧑‍🏫</div>
+            <div class="hp-card__title">Antrenörler</div>
+            <div class="hp-card__desc">Uzman antrenörleri keşfet, uzmanlık alanlarını incele.</div>
+            <div class="hp-card__link">Keşfet →</div>
+        </a>
+    </div>
+</section>
+
+<!-- NEDEN GYMAPP? -->
+<section class="hp-section">
+    <div class="hp-section__head">
+        <h2 class="hp-h2">Neden GymApp?</h2>
+        <p class="hp-muted">Modern teknoloji ile spor deneyimini üst seviyeye taşı.</p>
+    </div>
+
+    <div class="hp-grid hp-grid--4">
+        <div class="hp-benefit">
+            <div class="hp-benefit__icon">⚡</div>
+            <h3 class="hp-benefit__title">Hızlı & Kolay</h3>
+            <p class="hp-benefit__desc">Randevunu saniyeler içinde oluştur, anında onay al.</p>
+        </div>
+
+        <div class="hp-benefit">
+            <div class="hp-benefit__icon">🎯</div>
+            <h3 class="hp-benefit__title">Kişiselleştirilmiş</h3>
+            <p class="hp-benefit__desc">AI destekli öneriler ile sana özel programlar.</p>
+        </div>
+
+        <div class="hp-benefit">
+            <div class="hp-benefit__icon">🔒</div>
+            <h3 class="hp-benefit__title">Güvenli</h3>
+            <p class="hp-benefit__desc">Verileriniz şifrelenmiş ve güvenli şekilde saklanır.</p>
+        </div>
+
+        <div class="hp-benefit">
+            <div class="hp-benefit__icon">📱</div>
+            <h3 class="hp-benefit__title">Mobil Uyumlu</h3>
+            <p class="hp-benefit__desc">Her cihazdan erişim, her yerde kullanım kolaylığı.</p>
+        </div>
+    </div>
+</section>
+
+<!-- İSTATİSTİKLER -->
+<section class="hp-section">
+    <div class="hp-section__head">
+        <h2 class="hp-h2">Platform İstatistikleri</h2>
+        <p class="hp-muted">Büyüyen topluluğumuza katıl.</p>
+    </div>
+
+    <div class="hp-stats">
+        <div class="hp-stat">
+            <div class="hp-stat__icon">👥</div>
+            <div class="hp-stat__num">2500+</div>
+            <div class="hp-stat__label">Aktif Üye</div>
+        </div>
+        <div class="hp-stat">
+            <div class="hp-stat__icon">🏋️</div>
+            <div class="hp-stat__num">50+</div>
+            <div class="hp-stat__label">Uzman Antrenör</div>
+        </div>
+        <div class="hp-stat">
+            <div class="hp-stat__icon">🎉</div>
+            <div class="hp-stat__num">10k+</div>
+            <div class="hp-stat__label">Başarılı Randevu</div>
+        </div>
+        <div class="hp-stat">
+            <div class="hp-stat__icon">⭐</div>
+            <div class="hp-stat__num">4.9</div>
+            <div class="hp-stat__label">Kullanıcı Puanı</div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="hp-section">
+    <div class="hp-cta-banner">
+        <div class="hp-cta-banner__content">
+            <h2 class="hp-cta-banner__title">Hedeflerine Ulaşmaya Hazır mısın?</h2>
+            <p class="hp-cta-banner__desc">Hemen randevu oluştur ve fitness yolculuğuna başla!</p>
+        </div>
+        <div class="hp-cta-banner__actions">
+            <a class="hp-btn hp-btn--large hp-btn--primary" asp-controller="Services" asp-action="Index">
+                Hemen Başla
+            </a>
+            <a class="hp-btn hp-btn--large hp-btn--outline" asp-controller="AICenter" asp-action="Index">
+                AI Analizi Yap
+            </a>
         </div>
     </div>
 </section>

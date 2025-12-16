@@ -20,54 +20,36 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark fw-semibold @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                               asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+
+
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-area=""
-                               asp-controller="Gyms"
-                               asp-action="Index">
-                                Salonlar
-                            </a>
+                            <a class="nav-link text-dark @(ViewContext.RouteData.Values["controller"]?.ToString() == "Gyms" ? "active" : "")"
+                               asp-controller="Gyms" asp-action="Index">Salonlar</a>
+
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-area=""
-                               asp-controller="Services"
-                               asp-action="Index">
-                                Hizmetler
-                            </a>
+                            <a class="nav-link text-dark @(ViewContext.RouteData.Values["controller"]?.ToString() == "Services" ? "active" : "")"
+                               asp-controller="Services" asp-action="Index">Hizmetler</a>
+
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-area=""
-                               asp-controller="Trainers"
-                               asp-action="Index">
-                                Antrenörler
-                            </a>
+                            <a class="nav-link text-dark @(ViewContext.RouteData.Values["controller"]?.ToString() == "Trainers" ? "active" : "")"
+                               asp-controller="Trainers" asp-action="Index">Antrenörler</a>
+
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-area=""
-                               asp-controller="Appointments"
-                               asp-action="Index">
-                                Randevularım
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Reports" asp-action="Trainers">Raporlar</a>
-                        </li>
+                            <a class="nav-link text-dark @(ViewContext.RouteData.Values["controller"]?.ToString() == "Appointments" ? "active" : "")"
+                               asp-controller="Appointments" asp-action="Index">Randevularım</a>
 
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="AICenter" asp-action="Index">
-                                AI Center
-                            </a>
                         </li>
-
+                  
 
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
@@ -151,7 +133,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer text-muted">
         <div class="container">
             &copy; 2025 - GymApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
