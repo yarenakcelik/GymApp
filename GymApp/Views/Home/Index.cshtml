@@ -1,8 +1,150 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Ana Sayfa";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="home-hero">
+    <div class="container home-hero-inner">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <div class="home-badge">GymApp • Randevu • AI • Rapor</div>
+                <h1 class="home-title">
+                    Hedefine <span class="home-title-accent">akıllı</span> şekilde ilerle.
+                </h1>
+                <p class="home-subtitle">
+                    Antrenörlerini ve hizmetleri incele, randevunu planla, raporlarla takip et.
+                    AI Center ile sana özel öneri al.
+                </p>
+
+                <div class="home-cta">
+                    <a class="btn btn-primary home-btn" asp-controller="Appointments" asp-action="Index">
+                        Randevularım
+                    </a>
+                    <a class="btn btn-outline-light home-btn" asp-controller="AICenter" asp-action="Index">
+                        AI Center
+                    </a>
+                    <a class="btn btn-outline-light home-btn" asp-controller="Reports" asp-action="Trainers">
+                        Raporlar
+                    </a>
+                </div>
+
+                <div class="home-mini mt-4">
+                    <div class="home-mini-card">
+                        <div class="home-mini-kpi">Hızlı</div>
+                        <div class="home-mini-text">Randevu oluştur & yönet</div>
+                    </div>
+                    <div class="home-mini-card">
+                        <div class="home-mini-kpi">Akıllı</div>
+                        <div class="home-mini-text">AI ile öneri al</div>
+                    </div>
+                    <div class="home-mini-card">
+                        <div class="home-mini-kpi">Takip</div>
+                        <div class="home-mini-text">Raporlarla analiz et</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="home-glass">
+                    <div class="home-glass-title">Hızlı Erişim</div>
+
+                    <a class="home-glass-item" asp-controller="Appointments" asp-action="Index">
+                        <div class="home-ico">📅</div>
+                        <div>
+                            <div class="home-glass-item-title">Randevularım</div>
+                            <div class="home-glass-item-text">Mevcut randevuları görüntüle / yönet</div>
+                        </div>
+                    </a>
+
+                    <a class="home-glass-item" asp-controller="Reports" asp-action="Trainers">
+                        <div class="home-ico">📊</div>
+                        <div>
+                            <div class="home-glass-item-title">Raporlar</div>
+                            <div class="home-glass-item-text">Antrenör / sistem raporlarını incele</div>
+                        </div>
+                    </a>
+
+                    <a class="home-glass-item" asp-controller="AICenter" asp-action="Index">
+                        <div class="home-ico">🤖</div>
+                        <div>
+                            <div class="home-glass-item-title">AI Center</div>
+                            <div class="home-glass-item-text">Kişisel öneri ve analiz ekranı</div>
+                        </div>
+                    </a>
+
+                    <div class="home-glass-divider"></div>
+
+                    <div class="home-glass-small">
+                        Not: Diğer modüllere aşağıdan da geçebilirsin.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container home-section">
+    <div class="home-section-head">
+        <h2 class="home-section-title">Keşfet</h2>
+        <p class="home-section-sub">Salonlar, hizmetler ve antrenörlere hızlıca ulaş.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <a class="home-card" asp-controller="Gyms" asp-action="Index">
+                <div class="home-card-ico">🏋️</div>
+                <div class="home-card-title">Salonlar</div>
+                <div class="home-card-text">Spor salonlarını incele, detaylara git.</div>
+                <div class="home-card-link">Listeye git →</div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="home-card" asp-controller="Services" asp-action="Index">
+                <div class="home-card-ico">🧾</div>
+                <div class="home-card-title">Hizmetler</div>
+                <div class="home-card-text">Programlar ve hizmet çeşitlerini görüntüle.</div>
+                <div class="home-card-link">Listeye git →</div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="home-card" asp-controller="Trainers" asp-action="Index">
+                <div class="home-card-ico">🧑‍🏫</div>
+                <div class="home-card-title">Antrenörler</div>
+                <div class="home-card-text">Uzmanlık alanlarına göre antrenörleri keşfet.</div>
+                <div class="home-card-link">Listeye git →</div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="home-strip">
+    <div class="container">
+        <div class="row text-center g-3">
+            <div class="col-6 col-lg-3">
+                <div class="home-stat">
+                    <div class="home-stat-big">2500+</div>
+                    <div class="home-stat-small">Aktif Üye</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="home-stat">
+                    <div class="home-stat-big">50+</div>
+                    <div class="home-stat-small">Uzman Antrenör</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="home-stat">
+                    <div class="home-stat-big">10k+</div>
+                    <div class="home-stat-small">Başarı Hikayesi</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="home-stat">
+                    <div class="home-stat-big">15+</div>
+                    <div class="home-stat-small">Hizmet Çeşidi</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
