@@ -732,3 +732,92 @@ header {
     .navbar .dropdown-menu {
         z-index: 2100;
     }
+
+/* Bootstrap dropdown fixes (text visibility) */
+.dropdown-menu {
+    background: #ffffff !important;
+    border: 1px solid rgba(0,0,0,.08) !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,.18) !important;
+}
+
+.dropdown-item {
+    color: #0f172a !important;
+}
+
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+        background: #f1f5f9 !important;
+        color: #0f172a !important;
+    }
+/* Select / option visibility */
+select.form-select,
+select.form-control,
+.form-select {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid rgba(0,0,0,.12) !important;
+}
+
+select option {
+    color: #0f172a !important;
+    background-color: #ffffff !important;
+}
+
+/* Headings on dark background */
+h1, h2, h3, h4, h5, h6 {
+    color: rgba(255,255,255,.95);
+}
+
+/* Text inside light surfaces should be dark */
+.card, .table, .table-responsive, .modal-content, .offcanvas, .dropdown-menu {
+    color: #0f172a;
+}
+
+    .card h1, .card h2, .card h3, .card h4, .card h5, .card h6 {
+        color: #0f172a;
+    }
+
+/* Tables readability */
+.table {
+    background: #ffffff;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+    .table thead th {
+        background: #f8fafc !important;
+        color: #0f172a !important;
+        font-weight: 700;
+        border-bottom: 1px solid rgba(0,0,0,.08) !important;
+    }
+
+    .table td {
+        color: #0f172a !important;
+    }
+
+    .table tbody tr:hover {
+        background: #f1f5f9 !important;
+    }
+/* --- AI Result: açık zeminde koyu yazı --- */
+.ai-result-panel {
+    background: #dbeafe; /* açık mavi (istersen değiştir) */
+    color: #0f172a !important; /* koyu yazı */
+}
+
+    .ai-result-panel * {
+        color: #0f172a !important; /* içindeki h1,p,span vs hepsi koyu */
+    }
+
+    /* Eğer sonuç içinde link varsa */
+    .ai-result-panel a {
+        color: #1d4ed8 !important;
+    }
+
+/* Light surfaces: yazıyı koyulaştır (main * beyazını kırar) */
+.card, .card *,
+.table, .table *,
+.alert, .alert *,
+.modal-content, .modal-content *,
+.dropdown-menu, .dropdown-menu * {
+    color: #0f172a !important;
+}
