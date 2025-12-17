@@ -22,7 +22,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
 
-    // ? ?ifre kurallar?n? "sau" için gev?et
+
     options.Password.RequireDigit = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
@@ -46,12 +46,12 @@ builder.Services.AddHttpClient<AiService>();
 
 
 
-// MVC + Razor Pages (Identity ekranlar? için ?art)
+// MVC + Razor Pages 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
-// ? Uygulama aya?a kalkarken roller + admin kullan?c? olu?turulsun
+
 await DbSeeder.SeedAsync(app.Services);
 
 
@@ -68,7 +68,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 // Kimlik
-app.UseAuthentication();      // ?? BUNU EKLEMEK ÇOK ÖNEML?
+app.UseAuthentication();     
 app.UseAuthorization();
 
 // Admin Area route
@@ -81,7 +81,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Identity Razor Pages (Login, Register, ForgotPassword vs.)
-app.MapRazorPages();          // ?? Identity’nin sayfalar?n? aktif eder
+// Identity Razor Pages 
+app.MapRazorPages();         
 
 app.Run();

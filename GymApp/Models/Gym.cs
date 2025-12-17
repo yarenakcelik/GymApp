@@ -8,7 +8,7 @@ namespace GymApp.Models
         public int Id { get; set; }
 
         [Required, StringLength(100)]
-        public string Name { get; set; } = null!;   // PowerFit, EliteGym...
+        public string Name { get; set; } = null!;   
 
         [StringLength(200)]
         public string? Address { get; set; }

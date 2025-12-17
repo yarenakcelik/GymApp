@@ -17,7 +17,6 @@ namespace GymApp.Areas.Admin.Controllers
             _context = context;
         }
 
-        // GET: Admin/Appointments
         public async Task<IActionResult> Index(string status)
         {
             var query = _context.Appointments

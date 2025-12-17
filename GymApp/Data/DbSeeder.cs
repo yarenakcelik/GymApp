@@ -15,7 +15,7 @@ namespace GymApp.Data
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            // 1) Rolleri oluştur (yoksa)
+            // Rolleri oluştur (yoksa)
             string[] roles = { "Admin", "Member" };
 
             foreach (var role in roles)
@@ -26,9 +26,8 @@ namespace GymApp.Data
                 }
             }
 
-            // 2) Admin kullanıcıyı oluştur
-            // 👉 Burayı kendi numarana göre DÜZENLE
-            string adminEmail = "B231210087@sakarya.edu.tr";   // ÖRN:  B231210123@sakarya.edu.tr
+            // Admin kullanıcıyı oluştur
+            string adminEmail = "B231210087@sakarya.edu.tr";   
             string adminPassword = "sau";
 
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
@@ -46,19 +45,18 @@ namespace GymApp.Data
 
                 if (!createResult.Succeeded)
                 {
-                    // Hata olursa debug kolay olsun diye buraya breakpoint koyabilirsin
                     throw new Exception("Admin kullanıcısı oluşturulamadı: " +
                         string.Join(" | ", createResult.Errors));
                 }
             }
 
-            // 3) Admin rolüne ekle
+            // Admin rolüne ekle
             if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
             {
                 await userManager.AddToRoleAsync(adminUser, "Admin");
             }
 
-            // 4) Örnek Trainer Specialization'lar
+            //Örnek Trainer Specialization'lar
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             if (!context.TrainerSpecializations.Any())

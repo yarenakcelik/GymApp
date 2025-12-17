@@ -41,9 +41,7 @@ namespace GymApp.Controllers.Api
 
             if (!string.IsNullOrWhiteSpace(status) && status != "Hepsi")
             {
-                // Status değerlerin senin sistemde: Pending/Approved/Rejected/Cancelled
-                // ama ekranda Türkçe gösteriyorsun.
-                // Bu yüzden burada Türkçe -> İngilizce map yapacağız:
+           
                 status = status.Trim();
 
                 var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
@@ -52,13 +50,13 @@ namespace GymApp.Controllers.Api
                     { "Onaylandı", "Approved" },
                     { "Reddedildi", "Rejected" },
                     { "İptal Edildi", "Cancelled" },
-                    { "Iptal Edildi", "Cancelled" } // olası yazım
+                    { "Iptal Edildi", "Cancelled" } 
                 };
 
                 if (map.ContainsKey(status))
                     query = query.Where(a => a.Status == map[status]);
                 else
-                    query = query.Where(a => a.Status == status); // direkt gelirse
+                    query = query.Where(a => a.Status == status);
             }
 
             var data = await query
@@ -84,5 +82,77 @@ namespace GymApp.Controllers.Api
 
             return Ok(data);
         }
+
+        // GET: /api/appointments/slots?trainerId=1&serviceId=5&date=2025-12-18
+        [HttpGet("slots")]
+        public async Task<IActionResult> Slots([FromQuery] int trainerId, [FromQuery] int serviceId, [FromQuery] string date)
+        {
+
+            if (!DateTime.TryParse(date, out var day))
+                return BadRequest("Invalid date");
+
+            var trainer = await _context.Trainers.FirstOrDefaultAsync(t => t.Id == trainerId);
+            var service = await _context.Services.FirstOrDefaultAsync(s => s.Id == serviceId);
+
+            if (trainer == null || service == null)
+                return NotFound();
+
+            if (!trainer.AvailableFrom.HasValue || !trainer.AvailableTo.HasValue)
+                return Ok(new List<SlotResponse>());
+
+            var workStart = day.Date.Add(trainer.AvailableFrom.Value);
+            var workEnd = day.Date.Add(trainer.AvailableTo.Value);
+
+            var duration = service.DurationMinutes;
+            if (duration <= 0) return Ok(new List<SlotResponse>());
+
+            var apps = await _context.Appointments
+                .Where(a => a.TrainerId == trainerId &&
+                            a.Status != "Cancelled" &&
+                            a.Status != "Rejected" &&
+                            a.StartTime.Date == day.Date)
+                .Select(a => new { a.StartTime, a.DurationMinutes })
+                .ToListAsync();
+
+            bool Conflicts(DateTime start, DateTime end)
+            {
+                foreach (var a in apps)
+                {
+                    var aStart = a.StartTime;
+                    var aEnd = a.StartTime.AddMinutes(a.DurationMinutes);
+                    if (start < aEnd && end > aStart) return true;
+                }
+                return false;
+            }
+
+            var stepMinutes = 30;
+
+            var slots = new List<SlotResponse>();
+            for (var t = workStart; t.AddMinutes(duration) <= workEnd; t = t.AddMinutes(stepMinutes))
+            {
+                if (t <= DateTime.Now) continue;
+
+                var end = t.AddMinutes(duration);
+                if (Conflicts(t, end)) continue;
+
+                slots.Add(new SlotResponse
+                {
+                    StartIso = t.ToString("yyyy-MM-ddTHH:mm"),
+                    Label = t.ToString("HH:mm")
+                });
+            }
+
+            return Ok(slots);
+        }
+
+
     }
+
+    public class SlotResponse
+    {
+        public string StartIso { get; set; } = ""; 
+        public string Label { get; set; } = "";    
+    }
+
+
 }

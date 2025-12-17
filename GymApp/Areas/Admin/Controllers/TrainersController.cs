@@ -52,12 +52,11 @@ namespace GymApp.Areas.Admin.Controllers
         }
 
         // GET: Admin/Trainers/Create
-        // GET: Admin/Trainers/Create
         public IActionResult Create()
         {
             ViewData["GymId"] = new SelectList(_context.Gyms, "Id", "Name");
             ViewData["TrainerSpecializationId"] = new SelectList(_context.TrainerSpecializations, "Id", "Name");
-            ViewBag.Services = _context.Services.ToList();   // ✔ Hizmet listesi
+            ViewBag.Services = _context.Services.ToList(); 
             return View();
         }
 
@@ -66,9 +65,9 @@ namespace GymApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             [Bind("Id,FullName,Email,Phone,Bio,GymId,TrainerSpecializationId,AvailableFrom,AvailableTo")] Trainer trainer,
-            int[] selectedServiceIds)   // ✔ Seçili hizmet ID’leri
+            int[] selectedServiceIds)   
         {
-            // En az bir hizmet seçildi mi kontrol et
+            // En az bir hizmet seçildi mi kontrol etme
             if (selectedServiceIds == null || selectedServiceIds.Length == 0)
             {
                 ModelState.AddModelError("SelectedServiceIds", "En az bir hizmet seçmelisiniz.");
@@ -76,11 +75,10 @@ namespace GymApp.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                // Önce antrenörü kaydet
                 _context.Add(trainer);
                 await _context.SaveChangesAsync();
 
-                // Sonra seçili hizmetler için TrainerService kayıtları oluştur
+                //Seçili hizmetler için TrainerService kayıtları oluşturma
                 foreach (var serviceId in selectedServiceIds)
                 {
                     _context.TrainerServices.Add(new TrainerService
@@ -95,7 +93,7 @@ namespace GymApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // ModelState geçersizse dropdown ve hizmet listesini tekrar doldur
+            // ModelState geçersizse dropdown ve hizmet listesini tekrar doldurma
             ViewData["GymId"] = new SelectList(_context.Gyms, "Id", "Name", trainer.GymId);
             ViewData["TrainerSpecializationId"] = new SelectList(_context.TrainerSpecializations, "Id", "Name", trainer.TrainerSpecializationId);
             ViewBag.Services = _context.Services.ToList();
@@ -238,10 +236,10 @@ namespace GymApp.Areas.Admin.Controllers
             if (trainer == null)
                 return NotFound();
 
-            // Eski eşleştirmeleri sil
+            // Eski eşleştirmeleri silme
             _context.TrainerServices.RemoveRange(trainer.TrainerServices);
 
-            // Yeni seçilen hizmetler için kayıt ekle
+            // Yeni seçilen hizmetler için kayıt ekleme
             if (model.SelectedServiceIds != null)
             {
                 foreach (var serviceId in model.SelectedServiceIds)

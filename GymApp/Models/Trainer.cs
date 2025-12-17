@@ -24,12 +24,10 @@ namespace GymApp.Models
         [Display(Name = "Biyografi")]
         public string? Bio { get; set; }
 
-        // 🔴 ZORUNLU OLAN ASIL ALAN BU
         [Required(ErrorMessage = "Lütfen bir spor salonu seçin.")]
         [Display(Name = "Spor Salonu")]
         public int GymId { get; set; }
 
-        // 🔵 NAVIGATION PROPERTY – BURADA **[Required] OLMAYACAK**
         public Gym? Gym { get; set; }
 
         [Display(Name = "Uzmanlık Alanı")]

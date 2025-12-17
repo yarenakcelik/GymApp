@@ -33,7 +33,7 @@ namespace GymApp.Models
         public decimal Price { get; set; }
 
 
-        // Onay durumu: Pending / Approved / Rejected / Cancelled
+        // Onay durumu
         [StringLength(20)]
         public string Status { get; set; } = "Pending";
 

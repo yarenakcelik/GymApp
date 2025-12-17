@@ -16,18 +16,17 @@ namespace GymApp.Services
             _config = config;
         }
 
-        // ✅ TEK YERDEN API KEY OKU (config + env fallback)
         private string GetApiKey()
         {
-            // appsettings.json içi
+
             var apiKey = _config["Ai:ApiKey"];
 
             if (string.IsNullOrWhiteSpace(apiKey))
             {
-                // Windows ortam değişkeni (User + Machine garanti)
+                // Windows ortam değişkeni 
                 apiKey = Environment.GetEnvironmentVariable("GROQ_API_KEY", EnvironmentVariableTarget.User)
                       ?? Environment.GetEnvironmentVariable("GROQ_API_KEY", EnvironmentVariableTarget.Machine)
-                      ?? Environment.GetEnvironmentVariable("GROQ_API_KEY"); // son çare
+                      ?? Environment.GetEnvironmentVariable("GROQ_API_KEY"); 
             }
 
             if (string.IsNullOrWhiteSpace(apiKey))
@@ -56,7 +55,7 @@ namespace GymApp.Services
 
         public async Task<string> GetRecommendationAsync(AiRequestDto req, CancellationToken ct = default)
         {
-            var apiKey = GetApiKey(); // ✅ artık burada da env fallback var
+            var apiKey = GetApiKey(); 
             var baseUrl = _config["Ai:BaseUrl"];
             var model = _config["Ai:Model"];
 

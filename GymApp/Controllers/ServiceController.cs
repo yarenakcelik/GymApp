@@ -34,7 +34,7 @@ namespace GymApp.Controllers
                 .Include(s => s.Gym)
                 .Include(s => s.TrainerServices)
                     .ThenInclude(ts => ts.Trainer)
-                        .ThenInclude(t => t.TrainerSpecialization)   // ⭐ EKLEDİK
+                        .ThenInclude(t => t.TrainerSpecialization)  
                 .FirstOrDefaultAsync(s => s.Id == id);
 
             if (service == null)

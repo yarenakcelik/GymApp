@@ -18,7 +18,6 @@ namespace GymApp.Areas.Admin.Controllers
             _context = context;
         }
 
-        // GET: Admin/Services
         public async Task<IActionResult> Index()
         {
             var services = _context.Services
@@ -27,7 +26,6 @@ namespace GymApp.Areas.Admin.Controllers
             return View(await services.ToListAsync());
         }
 
-        // GET: Admin/Services/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -43,14 +41,12 @@ namespace GymApp.Areas.Admin.Controllers
             return View(service);
         }
 
-        // GET: Admin/Services/Create
         public IActionResult Create()
         {
             ViewData["GymId"] = new SelectList(_context.Gyms, "Id", "Name");
             return View();
         }
 
-        // POST: Admin/Services/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Description,Category,DurationMinutes,Price,GymId")] Service service)
@@ -62,12 +58,10 @@ namespace GymApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // ModelState hatalıysa dropdown tekrar dolsun
             ViewData["GymId"] = new SelectList(_context.Gyms, "Id", "Name", service.GymId);
             return View(service);
         }
 
-        // GET: Admin/Services/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,7 +75,6 @@ namespace GymApp.Areas.Admin.Controllers
             return View(service);
         }
 
-        // POST: Admin/Services/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Category,DurationMinutes,Price,GymId")] Service service)
@@ -110,7 +103,6 @@ namespace GymApp.Areas.Admin.Controllers
             return View(service);
         }
 
-        // GET: Admin/Services/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -126,7 +118,7 @@ namespace GymApp.Areas.Admin.Controllers
             return View(service);
         }
 
-        // POST: Admin/Services/Delete/5
+  
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

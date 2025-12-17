@@ -34,9 +34,7 @@ namespace GymApp.Models
         [Display(Name = "Spor Salonu")]
         public int GymId { get; set; }
 
-        // 🔥 ÖNEMLİ KISIM:
-        // Bu navigation property'yi validasyondan tamamen çıkarıyoruz
-        // ve nullable yapıyoruz ki "Gym zorunlu" hatası üretmesin.
+  
         [ValidateNever]
         public Gym? Gym { get; set; }
 

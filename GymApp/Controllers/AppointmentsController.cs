@@ -30,7 +30,7 @@ namespace GymApp.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
-                return Challenge(); // tekrar login iste
+                return Challenge(); // tekrar login ister
 
             var member = await _context.MemberProfiles
                 .FirstOrDefaultAsync(m => m.ApplicationUserId == user.Id);
@@ -69,7 +69,6 @@ namespace GymApp.Controllers
             if (user == null)
                 return Challenge();
 
-            // Profil olmasa bile sayfa açılsın, 404 vermesin
             var member = await _context.MemberProfiles
                 .FirstOrDefaultAsync(m => m.ApplicationUserId == user.Id);
 
@@ -88,7 +87,6 @@ namespace GymApp.Controllers
                 .Distinct()
                 .ToList();
 
-            // Varsayılan olarak ilk antrenör
             int selectedTrainerId = trainers.Any() ? trainers.First().Id : 0;
 
             ViewBag.Service = service;
@@ -99,7 +97,7 @@ namespace GymApp.Controllers
             {
                 ServiceId = service.Id,
                 TrainerId = selectedTrainerId,
-                StartTime = DateTime.Now.AddDays(1) // varsayılan tarih
+                StartTime = DateTime.Now.AddDays(1) 
             };
 
             return View(model);
@@ -110,7 +108,6 @@ namespace GymApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Appointment appointment)
         {
-            // Navigation property'leri ModelState doğrulamasından çıkar
             ModelState.Remove(nameof(Appointment.Service));
             ModelState.Remove(nameof(Appointment.Trainer));
             ModelState.Remove(nameof(Appointment.MemberProfile));
@@ -128,13 +125,12 @@ namespace GymApp.Controllers
                 member = new MemberProfile
                 {
                     ApplicationUserId = user.Id
-                    // Diğer alanlar varsayılan kalsın
+
                 };
                 _context.MemberProfiles.Add(member);
                 await _context.SaveChangesAsync();
             }
 
-            // Hizmeti mutlaka çekmemiz lazım (süre ve fiyat için)
             var service = await _context.Services
                 .Include(s => s.Gym)
                 .Include(s => s.TrainerServices)
@@ -156,7 +152,7 @@ namespace GymApp.Controllers
                 appointment.Price = service.Price;
                 appointment.Status = "Pending";
 
-                // 1) Geçmişe randevu alınamaz
+                // Geçmişe randevu alınamaz
                 if (appointment.StartTime <= DateTime.Now)
                 {
                     ModelState.AddModelError("StartTime", "Geçmiş bir zamana randevu alamazsınız.");
@@ -166,7 +162,7 @@ namespace GymApp.Controllers
                 var newStart = appointment.StartTime;
                 var newEnd = appointment.StartTime.AddMinutes(appointment.DurationMinutes);
 
-                // 1.5) Antrenörün günlük çalışma saatleri içinde mi? (AvailableFrom / AvailableTo)
+                // Antrenörün günlük çalışma saatleri içinde mi? 
                 var trainer = await _context.Trainers
                     .FirstOrDefaultAsync(t => t.Id == appointment.TrainerId);
 
@@ -186,7 +182,7 @@ namespace GymApp.Controllers
                     }
                 }
 
-                // 2) Aynı antrenörün başka randevusu ile çakışma var mı?
+                // Aynı antrenörün başka randevusu ile çakışma var mı?
                 var trainerConflict = await _context.Appointments
                     .Where(a => a.TrainerId == appointment.TrainerId &&
                                 a.Status != "Cancelled" &&
@@ -200,7 +196,7 @@ namespace GymApp.Controllers
                     ModelState.AddModelError("StartTime", "Bu antrenör seçtiğiniz saatte başka bir randevuya sahip.");
                 }
 
-                // 3) Üyenin kendi randevularıyla çakışma var mı?
+                //Üyenin kendi randevularıyla çakışma var mı?
                 var memberConflict = await _context.Appointments
                     .Where(a => a.MemberProfileId == member.Id &&
                                 a.Status != "Cancelled" &&
@@ -331,7 +327,7 @@ namespace GymApp.Controllers
                 existing.TrainerId = formAppointment.TrainerId;
                 existing.StartTime = formAppointment.StartTime;
 
-                // Süre ve ücreti servisten tekrar kopyala (değişmiş olabilir)
+                // Süre ve ücreti servisten tekrar kopyala 
                 existing.DurationMinutes = service.DurationMinutes;
                 existing.Price = service.Price;
 
@@ -341,7 +337,7 @@ namespace GymApp.Controllers
                 var newStart = existing.StartTime;
                 var newEnd = existing.StartTime.AddMinutes(existing.DurationMinutes);
 
-                // 1.5) Antrenör çalışma saatleri kontrolü (AvailableFrom / AvailableTo)
+                //Antrenör çalışma saatleri kontrolü 
                 var trainer = await _context.Trainers
                     .FirstOrDefaultAsync(t => t.Id == existing.TrainerId);
 
@@ -361,7 +357,7 @@ namespace GymApp.Controllers
                     }
                 }
 
-                // Aynı antrenörün başka randevusu var mı? (kendisi hariç)
+                // Aynı antrenörün başka randevusu var mı? 
                 var trainerConflict = await _context.Appointments
                     .Where(a => a.TrainerId == existing.TrainerId &&
                                 a.Id != existing.Id &&
@@ -376,7 +372,7 @@ namespace GymApp.Controllers
                     ModelState.AddModelError("StartTime", "Bu antrenör seçtiğiniz saatte başka bir randevuya sahip.");
                 }
 
-                // Üyenin kendi randevuları ile çakışma var mı? (kendisi hariç)
+                // Üyenin kendi randevuları ile çakışma var mı?
                 var memberConflict = await _context.Appointments
                     .Where(a => a.MemberProfileId == member.Id &&
                                 a.Id != existing.Id &&

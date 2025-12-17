@@ -10,7 +10,7 @@
 <h2 class="mt-4 mb-3">Randevu Al</h2>
 
 <form asp-action="Create" method="post">
-    @* ServiceId’yi formda gizli olarak gönderiyoruz *@
+    @* ServiceId’yi formda gizli olarak gönderiyorum *@
     <input asp-for="ServiceId" type="hidden" />
 
     <div asp-validation-summary="All" class="text-danger mb-3"></div>
@@ -58,11 +58,29 @@
     </div>
 
 
-    <div class="mb-3">
-        <label asp-for="StartTime" class="form-label">Başlangıç Tarih/Saat</label>
-        <input asp-for="StartTime" class="form-control" type="datetime-local" />
-        <span asp-validation-for="StartTime" class="text-danger"></span>
+    <input asp-for="StartTime" type="hidden" id="startTimeHidden" />
+    <span asp-validation-for="StartTime" class="text-danger"></span>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label class="form-label">Tarih</label>
+            <input type="date" class="form-control" id="datePicker" />
+        </div>
+
+        <div class="col-md-8">
+            <label class="form-label">Müsait Saatler</label>
+
+            <!-- Çalışma saati bilgisi -->
+            <div class="small text-muted mb-2" id="workInfo"></div>
+
+            <div class="d-flex flex-wrap gap-2" id="slotsWrap"></div>
+
+            <div class="small text-muted mt-2" id="slotHint">
+                Önce tarih seç, sonra saat seç.
+            </div>
+        </div>
     </div>
+
 
     <button type="submit" class="btn btn-primary">Randevuyu Kaydet</button>
     <a asp-controller="Services"
@@ -74,5 +92,66 @@
 </form>
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        const trainerSelect = document.querySelector('[name="TrainerId"]');
+        const serviceId = document.querySelector('[name="ServiceId"]').value;
+
+        const datePicker = document.getElementById('datePicker');
+        const slotsWrap = document.getElementById('slotsWrap');
+        const startTimeHidden = document.getElementById('startTimeHidden');
+        const workInfo = document.getElementById('workInfo');
+
+        // default: yarın
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        datePicker.value = tomorrow.toISOString().slice(0, 10);
+
+        async function loadSlots() {
+            const trainerId = trainerSelect.value;
+            const date = datePicker.value;
+
+            slotsWrap.innerHTML = '';
+            startTimeHidden.value = '';
+
+            if (!trainerId || !date) return;
+
+            const url = `/api/appointments/slots?trainerId=${trainerId}&serviceId=${serviceId}&date=${date}`;
+            const res = await fetch(url);
+            const slots = await res.json();
+
+            // Çalışma saatini kullanıcıya göster 
+            workInfo.innerText = slots.length
+                ? `Bu tarihte uygun saatler listelendi.`
+                : `Bu tarihte uygun saat bulunamadı.`;
+
+            if (!slots.length) return;
+
+            slots.forEach(s => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'btn btn-outline-primary btn-sm';
+                btn.textContent = s.label;
+
+                btn.addEventListener('click', () => {
+                    // seçimi vurgula
+                    [...slotsWrap.querySelectorAll('button')].forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    startTimeHidden.value = s.startIso;
+                });
+
+                slotsWrap.appendChild(btn);
+            });
+        }
+
+        trainerSelect.addEventListener('change', loadSlots);
+        datePicker.addEventListener('change', loadSlots);
+
+        
+        loadSlots();
+    </script>
 }

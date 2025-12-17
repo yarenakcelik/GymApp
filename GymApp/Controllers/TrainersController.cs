@@ -17,7 +17,6 @@ namespace GymApp.Controllers
         }
 
         // GET: /Trainers
-        // İsteğe bağlı filtre: gymId, specializationId
         public async Task<IActionResult> Index(int? gymId, int? specializationId)
         {
             var query = _context.Trainers

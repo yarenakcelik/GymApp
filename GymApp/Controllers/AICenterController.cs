@@ -2,7 +2,6 @@
 using GymApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-//ai center
 namespace GymApp.Controllers
 {
     [Authorize]
@@ -50,7 +49,6 @@ namespace GymApp.Controllers
                 vm.Result = await _ai.GetRecommendationAsync(vm.Request, ct);
                 vm.Error = null;
 
-                // Çıktıyı ayrı sayfada göstermek için
                 return View("Result", vm);
             }
             catch (Exception ex)

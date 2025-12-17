@@ -32,8 +32,8 @@ namespace GymApp.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var gym = await _context.Gyms
-                .Include(g => g.Services)          // Gym -> Service (1-N) varsayıyorum
-                .Include(g => g.Trainers)          // Gym -> Trainer (1-N)
+                .Include(g => g.Services)         
+                .Include(g => g.Trainers)         
                     .ThenInclude(t => t.TrainerSpecialization)
                 .FirstOrDefaultAsync(g => g.Id == id);
 

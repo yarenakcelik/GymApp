@@ -7,7 +7,7 @@ namespace GymApp.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] // giriş yapan görsün (istersen admin şartı da koyarız)
+    [Authorize] 
     public class ReportsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -17,8 +17,7 @@ namespace GymApp.Controllers.Api
             _context = context;
         }
 
-        // GET: /api/reports/trainers
-        // LINQ ile filtre: gymId, specializationId
+
         [HttpGet("trainers")]
         public async Task<IActionResult> GetTrainers([FromQuery] int? gymId, [FromQuery] int? specializationId)
         {
@@ -49,7 +48,6 @@ namespace GymApp.Controllers.Api
             return Ok(result);
         }
 
-        // GET: /api/reports/gyms
         [HttpGet("gyms")]
         public async Task<IActionResult> GetGyms()
         {
@@ -61,7 +59,6 @@ namespace GymApp.Controllers.Api
             return Ok(gyms);
         }
 
-        // GET: /api/reports/specializations
         [HttpGet("specializations")]
         public async Task<IActionResult> GetSpecializations()
         {

@@ -22,13 +22,11 @@ namespace GymApp.Areas.Admin.Controllers
             _context = context;
         }
 
-        // GET: Admin/Gyms
         public async Task<IActionResult> Index()
         {
             return View(await _context.Gyms.ToListAsync());
         }
 
-        // GET: Admin/Gyms/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,13 +44,11 @@ namespace GymApp.Areas.Admin.Controllers
             return View(gym);
         }
 
-        // GET: Admin/Gyms/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Admin/Gyms/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Address,OpenTime,CloseTime")] Gym gym)
@@ -66,7 +62,6 @@ namespace GymApp.Areas.Admin.Controllers
             return View(gym);
         }
 
-        // GET: Admin/Gyms/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -82,7 +77,6 @@ namespace GymApp.Areas.Admin.Controllers
             return View(gym);
         }
 
-        // POST: Admin/Gyms/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Address,OpenTime,CloseTime")] Gym gym)
@@ -115,7 +109,6 @@ namespace GymApp.Areas.Admin.Controllers
             return View(gym);
         }
 
-        // GET: Admin/Gyms/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,7 +126,6 @@ namespace GymApp.Areas.Admin.Controllers
             return View(gym);
         }
 
-        // POST: Admin/Gyms/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

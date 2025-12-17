@@ -29,15 +29,15 @@ namespace GymApp.Data
 
             builder.Entity<TrainerService>()
                 .HasOne(ts => ts.Trainer)
-                .WithMany(t => t.TrainerServices) // Trainer modelinde ICollection<TrainerService> varsa
+                .WithMany(t => t.TrainerServices) 
                 .HasForeignKey(ts => ts.TrainerId)
-                .OnDelete(DeleteBehavior.NoAction); // CASCADE KIR
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<TrainerService>()
                 .HasOne(ts => ts.Service)
-                .WithMany(s => s.TrainerServices)   // Service modelinde ICollection<TrainerService> varsa
+                .WithMany(s => s.TrainerServices)   
                 .HasForeignKey(ts => ts.ServiceId)
-                .OnDelete(DeleteBehavior.NoAction); // İstersen burada da NoAction
+                .OnDelete(DeleteBehavior.NoAction);
 
             // ---- Appointment ilişkileri ----
             builder.Entity<Appointment>()
