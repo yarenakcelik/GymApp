@@ -1,7 +1,7 @@
-﻿using System.Net.Http.Headers;
+﻿using Microsoft.Extensions.Configuration;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using Microsoft.Extensions.Configuration;
 
 namespace GymApp.Services
 {
@@ -18,15 +18,13 @@ namespace GymApp.Services
 
         private string GetApiKey()
         {
-
             var apiKey = _config["Ai:ApiKey"];
 
             if (string.IsNullOrWhiteSpace(apiKey))
             {
-                // Windows ortam değişkeni 
                 apiKey = Environment.GetEnvironmentVariable("GROQ_API_KEY", EnvironmentVariableTarget.User)
                       ?? Environment.GetEnvironmentVariable("GROQ_API_KEY", EnvironmentVariableTarget.Machine)
-                      ?? Environment.GetEnvironmentVariable("GROQ_API_KEY"); 
+                      ?? Environment.GetEnvironmentVariable("GROQ_API_KEY");
             }
 
             if (string.IsNullOrWhiteSpace(apiKey))
@@ -55,7 +53,7 @@ namespace GymApp.Services
 
         public async Task<string> GetRecommendationAsync(AiRequestDto req, CancellationToken ct = default)
         {
-            var apiKey = GetApiKey(); 
+            var apiKey = GetApiKey();
             var baseUrl = _config["Ai:BaseUrl"];
             var model = _config["Ai:Model"];
 
@@ -100,6 +98,122 @@ namespace GymApp.Services
             var content = parsed?.choices?.FirstOrDefault()?.message?.content;
 
             return string.IsNullOrWhiteSpace(content) ? "AI boş yanıt döndürdü." : content.Trim();
+        }
+
+        public class MealAnalysisResult
+        {
+            public bool HasPlate { get; set; }
+            public string MealName { get; set; } = "-";
+            public int EstimatedGrams { get; set; }
+            public int CaloriesKcal { get; set; }
+            public int ProteinG { get; set; }
+            public int CarbsG { get; set; }
+            public int FatG { get; set; }
+            public string Notes { get; set; } = "";
+        }
+
+        
+        public async Task<MealAnalysisResult> AnalyzeMealPhotoAsync(
+            byte[] imageBytes,
+            string contentType,
+            CancellationToken ct = default)
+        {
+            var apiKey = GetApiKey();
+            var baseUrl = _config["Ai:BaseUrl"];
+            var visionModel = _config["Ai:VisionModel"];
+
+            if (string.IsNullOrWhiteSpace(baseUrl))
+                throw new InvalidOperationException("Ai:BaseUrl bulunamadı.");
+            if (string.IsNullOrWhiteSpace(visionModel))
+                throw new InvalidOperationException("Ai:VisionModel tanımlı değil. appsettings.json içine ekleyin.");
+
+            var url = $"{baseUrl.TrimEnd('/')}/chat/completions";
+
+            var base64 = Convert.ToBase64String(imageBytes);
+            var dataUrl = $"data:{contentType};base64,{base64}";
+
+            var systemPrompt =
+                "Sen bir beslenme uzmanı AI'sın. " +
+                "Fotoğrafta yemek/tabak yoksa hasPlate=false dön. " +
+                "Varsa yaklaşık makro değerleri tahmin et. " +
+                "Çıktı SADECE JSON olacak. Markdown yok. Başka hiçbir metin yok.";
+
+            var userText =
+@"Bu bir yemek fotoğrafı.
+
+Kurallar:
+- Fotoğrafta gerçekten gördüğün yemeğe göre mealName üret.
+- Emin değilsen mealName = ""Bilinmiyor"" yaz.
+- ""Kahvaltı/Akşam yemeği"" gibi öğün ismi UYDURMA.
+- Görseldeki ana öğeleri 2-5 kelimeyle belirt (örn: ""tavuk pilav"", ""hamburger patates"", ""salata"", ""çorba"").
+
+
+SADECE aşağıdaki JSON formatında cevap ver:
+
+{
+  ""hasPlate"": true,
+  ""mealName"": ""..."",
+  ""estimatedGrams"": 0,
+  ""caloriesKcal"": 0,
+  ""proteinG"": 0,
+  ""carbsG"": 0,
+  ""fatG"": 0,
+  ""notes"": ""Tahmini değerlerdir.""
+}";
+
+            var payload = new
+            {
+                model = visionModel,
+                temperature = 0.2,
+                messages = new object[]
+                {
+                    new { role = "system", content = systemPrompt },
+                    new
+                    {
+                        role = "user",
+                        content = new object[]
+                        {
+                            new { type = "text", text = userText },
+                            new { type = "image_url", image_url = new { url = dataUrl } }
+                        }
+                    }
+                }
+            };
+
+            var json = JsonSerializer.Serialize(payload);
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, url);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            using var resp = await _http.SendAsync(request, ct);
+            var body = await resp.Content.ReadAsStringAsync(ct);
+
+            if (!resp.IsSuccessStatusCode)
+                throw new InvalidOperationException($"AI API hata: {(int)resp.StatusCode} {resp.ReasonPhrase} - {body}");
+
+            var parsed = JsonSerializer.Deserialize<ChatCompletionResponse>(body);
+            var content = parsed?.choices?.FirstOrDefault()?.message?.content;
+
+            if (string.IsNullOrWhiteSpace(content))
+                throw new InvalidOperationException("AI boş yanıt döndürdü.");
+
+            // JSON parse
+            try
+            {
+                var result = JsonSerializer.Deserialize<MealAnalysisResult>(
+                    content,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                if (result == null)
+                    throw new InvalidOperationException("AI JSON parse edilemedi.");
+
+                return result;
+            }
+            catch
+            {
+                throw new InvalidOperationException("AI beklenen JSON formatında yanıt vermedi.");
+            }
         }
 
         private static string BuildHtmlPrompt(AiRequestDto req)
